@@ -28,12 +28,12 @@ export const customFetch = async (req: FetchStructure) => {
 
     try {
         const response = await fetch(`/api/${path}`, options);
-        console.log(response);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         
         const data = await response.json();
+        console.log(data);
         return { data, status: response.status };
     } catch (error) {
         console.error('Fetch error:', error);

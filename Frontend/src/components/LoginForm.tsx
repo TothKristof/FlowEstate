@@ -7,15 +7,6 @@ interface UserCredentials {
   password: string;
 }
 
-function login(user: UserCredentials) {
-  const response = customFetch({
-    path: "user/login",
-    method: "GET",
-    body: user,
-    jwt: localStorage.getItem("jwt"),
-  });
-}
-
 function LoginForm() {
   const navigate = useNavigate();
   const [isVisible, setVisible] = useState(false);
@@ -23,6 +14,19 @@ function LoginForm() {
     email: "",
     password: "",
   });
+
+async function login(user: UserCredentials) {
+    const response = await customFetch({
+        path: "user/login",
+        method: "POST",
+        body: user,
+        jwt: localStorage.getItem("jwt"),
+    });
+    if (response.data.jwt) {
+        localStorage.setItem("jwt", response.data.jwt);
+        navigate("/content");
+    }
+}
 
   useEffect(() => {
     const timeout = setTimeout(() => setVisible(true), 10);
@@ -39,9 +43,8 @@ function LoginForm() {
 
   return (
     <div
-      className={`w-1/2 p-6 flex flex-col bg-white/80 backdrop-blur-sm rounded-r-[1rem] transition-opacity duration-1000 ease-out ${
-        isVisible ? "opacity-100" : "opacity-0"
-      }`}
+      className={`w-1/2 p-6 flex flex-col bg-white/80 backdrop-blur-sm rounded-r-[1rem] transition-opacity duration-1000 ease-out ${isVisible ? "opacity-100" : "opacity-0"
+        }`}
     >
       <h1 className="text-center text-3xl font-semibold text-emerald-800">
         Login
@@ -67,7 +70,7 @@ function LoginForm() {
           placeholder="Password"
         />
 
-        <button className="btn btn-neutral mt-4">Login</button>
+        <button className="btn btn-neutral mt-4" onClick={() => login(userCredentials)}>Login</button>
       </fieldset>
 
       <div className="text-center">
@@ -84,7 +87,9 @@ function LoginForm() {
 
       <button
         className="btn gap-2 mx-30"
-        onClick={() => login(userCredentials)}
+        onClick={() => {
+          window.location.href = "http://localhost:8082/oauth2/authorize/google";
+        }}
       >
         <img
           src="https://www.google.com/favicon.ico"
