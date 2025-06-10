@@ -15,18 +15,27 @@ function LoginForm() {
     password: "",
   });
 
-async function login(user: UserCredentials) {
+  async function login(user: UserCredentials) {
     const response = await customFetch({
-        path: "user/login",
-        method: "POST",
-        body: user,
-        jwt: localStorage.getItem("jwt"),
+      path: "user/login",
+      method: "POST",
+      body: user,
+      jwt: localStorage.getItem("jwt"),
     });
     if (response.data.jwt) {
-        localStorage.setItem("jwt", response.data.jwt);
-        navigate("/content");
+      localStorage.setItem("jwt", response.data.jwt);
+      navigate("/content");
     }
-}
+  }
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    const token = searchParams.get("token");
+    if (token) {
+      localStorage.setItem("jwt", token);
+      navigate("/content", { replace: true });
+    }
+  }, [location, navigate]);
 
   useEffect(() => {
     const timeout = setTimeout(() => setVisible(true), 10);
@@ -43,8 +52,9 @@ async function login(user: UserCredentials) {
 
   return (
     <div
-      className={`bg-white/80 backdrop-blur-sm rounded-r-[1rem] transition-opacity duration-1000 ease-out ${isVisible ? "opacity-100" : "opacity-0"
-        }`}
+      className={`bg-white/80 backdrop-blur-sm rounded-r-[1rem] transition-opacity duration-1000 ease-out ${
+        isVisible ? "opacity-100" : "opacity-0"
+      }`}
     >
       <h1 className="text-center text-3xl font-semibold text-emerald-800">
         Login
@@ -70,7 +80,12 @@ async function login(user: UserCredentials) {
           placeholder="Password"
         />
 
-        <button className="btn btn-neutral mt-4" onClick={() => login(userCredentials)}>Login</button>
+        <button
+          className="btn btn-neutral mt-4"
+          onClick={() => login(userCredentials)}
+        >
+          Login
+        </button>
       </fieldset>
 
       <div className="text-center">
@@ -88,7 +103,8 @@ async function login(user: UserCredentials) {
       <button
         className="w-60 btn gap-2 mx-30"
         onClick={() => {
-          window.location.href = "http://localhost:8082/oauth2/authorize/google";
+          window.location.href =
+            "http://localhost:8082/oauth2/authorize/google";
         }}
       >
         <img
