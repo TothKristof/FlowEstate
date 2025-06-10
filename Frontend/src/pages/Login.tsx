@@ -5,9 +5,16 @@ import LoginForm from "../components/LoginForm";
 function Login() {
 
   return (
-    <div className={`h-[102vh] flex -mt-20 justify-center items-center backdrop-blur-sm`}>
-      <div className="w-3/4 h-[75%] flex bg-white/90 rounded-[1rem] shadow-2xl">
-        <div className="w-1/2 overflow-hidden relative">
+    <div
+      className="h-[100vh] flex justify-center items-center backdrop-blur-3xl"
+      style={{
+        backgroundImage: window.innerWidth < 1280 ? `url(${LoginPic})` : 'none',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
+    >
+      <div className="md:w-3/4 h-[75%] flex bg-white/90 rounded-[1rem] shadow-2xl">
+        <div className="w-1/2 overflow-hidden relative hidden xl:block">
           <div className="absolute top-4 left-4 z-10">
             <Brand></Brand>
           </div>
@@ -17,7 +24,9 @@ function Login() {
             alt=""
           />
         </div>
-        <LoginForm></LoginForm>
+        <div className="sm:w-full xl:w-1/2 flex justify-center items-center">
+          <LoginForm></LoginForm>
+        </div>
       </div>
     </div>
   );

@@ -4,7 +4,7 @@ function InformationBlock4() {
   return (
     <div className="w-full py-16">
     <div className="max-w-7xl mx-auto px-4">
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
         <div className="flex flex-col items-center">
           <h2 className="text-5xl font-bold mb-2">98%</h2>
           <p className="text-gray-600 text-lg">Client Satisfaction</p>
