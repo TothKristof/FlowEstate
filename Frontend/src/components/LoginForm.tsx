@@ -43,7 +43,7 @@ async function login(user: UserCredentials) {
 
   return (
     <div
-      className={`w-1/2 p-6 flex flex-col bg-white/80 backdrop-blur-sm rounded-r-[1rem] transition-opacity duration-1000 ease-out ${isVisible ? "opacity-100" : "opacity-0"
+      className={`bg-white/80 backdrop-blur-sm rounded-r-[1rem] transition-opacity duration-1000 ease-out ${isVisible ? "opacity-100" : "opacity-0"
         }`}
     >
       <h1 className="text-center text-3xl font-semibold text-emerald-800">
@@ -86,7 +86,7 @@ async function login(user: UserCredentials) {
       <div className="divider px-8 text-gray-500">OR</div>
 
       <button
-        className="btn gap-2 mx-30"
+        className="w-60 btn gap-2 mx-30"
         onClick={() => {
           window.location.href = "http://localhost:8082/oauth2/authorize/google";
         }}

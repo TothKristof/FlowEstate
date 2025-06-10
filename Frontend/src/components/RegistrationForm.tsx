@@ -98,11 +98,11 @@ function RegistrationForm() {
   return (
     <>
     <div
-      className={`w-1/2 p-6 flex flex-col bg-white/80 backdrop-blur-sm rounded-r-[1rem] transition-opacity duration-1000 ease-out ${
+      className={`flex flex-col backdrop-blur-sm rounded-r-[1rem] transition-opacity duration-1000 ease-out ${
         isFormVisible ? 'opacity-100' : 'opacity-0'
       }`}
     >
-      <h1 className="text-center text-3xl font-semibold text-emerald-800">
+      <h1 className="text-center text-4xl font-semibold text-emerald-800">
         Registration
       </h1>
       <fieldset className="fieldset w-xs p-4 mx-auto mt-10">
