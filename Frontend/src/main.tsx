@@ -7,38 +7,51 @@ import WelcomePage from "./pages/WelcomePage";
 import Login from "./pages/Login";
 import Registration from "./pages/Registration";
 import MainPage from "./pages/MainPage";
+import LoggedInLayout from "./components/LoggedInLayout";
+import Upload from "./pages/Upload";
 
-import "./main.css"
+import "./main.css";
 
 const router = createBrowserRouter([
-    {
+  {
+    path: "/",
+    element: <Layout />,
+    // errorElement: <ErrorPage/>,
+    children: [
+      {
         path: "/",
-        element: <Layout />,
-        // errorElement: <ErrorPage/>,
-        children: [
-            {
-                path: "/",
-                element: <WelcomePage />
-            },
-        ],
-    },
-    {
-        path: "/content",
-        element: <MainPage></MainPage>
-    },
-    {
-        path: "login",
-        element: <Login></Login>
-    },
-    {
-        path: "registration",
-        element: <Registration></Registration>
-    },
+        element: <WelcomePage />,
+      },
+    ],
+  },
+  {
+    path: "/main",
+    element: <LoggedInLayout />,
+    // errorElement: <ErrorPage/>,
+    children: [
+      {
+        path: "/main",
+        element: <MainPage />,
+      },
+      {
+        path: "/main/upload",
+        element: <Upload></Upload>,
+      },
+    ],
+  },
+  {
+    path: "login",
+    element: <Login></Login>,
+  },
+  {
+    path: "registration",
+    element: <Registration></Registration>,
+  },
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-    <React.StrictMode>
-        <RouterProvider router={router} />
-    </React.StrictMode>
+  <React.StrictMode>
+    <RouterProvider router={router} />
+  </React.StrictMode>
 );

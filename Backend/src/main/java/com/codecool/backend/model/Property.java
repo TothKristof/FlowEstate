@@ -1,10 +1,14 @@
 package com.codecool.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -25,4 +29,9 @@ public class Property {
     @Enumerated(EnumType.STRING)
     private Condition condition;
     private int builtYear;
+    private boolean sell;
+    @Enumerated(EnumType.STRING)
+    private PropertyType propertyType;
+    @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<PropertyImage> images = new ArrayList<>();
 }

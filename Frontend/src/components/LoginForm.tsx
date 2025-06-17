@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { customFetch } from "../services/fetch";
+import { customFetch } from "../utils/fetch";
 
 interface UserCredentials {
   email: string;
@@ -24,7 +24,7 @@ function LoginForm() {
     });
     if (response.data.jwt) {
       localStorage.setItem("jwt", response.data.jwt);
-      navigate("/content");
+      navigate("/main");
     }
   }
 
@@ -33,7 +33,7 @@ function LoginForm() {
     const token = searchParams.get("token");
     if (token) {
       localStorage.setItem("jwt", token);
-      navigate("/content", { replace: true });
+      navigate("/main", { replace: true });
     }
   }, [location, navigate]);
 

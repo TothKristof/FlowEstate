@@ -5,6 +5,7 @@ import com.codecool.backend.model.Role;
 import com.codecool.backend.model.UserEntity;
 import com.codecool.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,16 +27,18 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String email)
-            throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         UserEntity user = userRepository.findUserByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException(email));
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        List<SimpleGrantedAuthority> roles = new ArrayList<>();
-        for (Role role : user.getRoles()) {
-            roles.add(new SimpleGrantedAuthority(role.name()));
-        }
+        List<SimpleGrantedAuthority> authorities = user.getRoles().stream()
+                .map(role -> new SimpleGrantedAuthority(role.name()))
+                .toList();
 
-        return new User(user.getEmail(), user.getPassword(),roles);
+        return new org.springframework.security.core.userdetails.User(
+                user.getEmail(),
+                user.getPassword() != null ? user.getPassword() : "", // OAuth2 esetén lehet null
+                authorities
+        );
     }
 }

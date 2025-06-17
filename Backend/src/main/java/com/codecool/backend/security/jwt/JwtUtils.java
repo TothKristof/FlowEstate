@@ -1,6 +1,9 @@
 package com.codecool.backend.security.jwt;
 
 
+import com.codecool.backend.model.Role;
+import com.codecool.backend.model.UserEntity;
+import com.codecool.backend.repository.UserRepository;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -8,11 +11,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class JwtUtils {
@@ -25,12 +32,19 @@ public class JwtUtils {
     @Value("${codecool.app.jwtExpirationMs}")
     private int jwtExpirationMs;
 
-    public String generateJwtToken(Authentication authentication) {
+    private final UserRepository userRepository;
 
+    public JwtUtils(UserRepository userRepository){
+        this.userRepository=userRepository;
+    }
+
+    public String generateJwtToken(Authentication authentication) {
         UserDetails userPrincipal = (UserDetails) authentication.getPrincipal();
 
         return Jwts.builder()
-                .setSubject((userPrincipal.getUsername()))
+                .setSubject(userPrincipal.getUsername())
+                .claim("roles", userPrincipal.getAuthorities().stream()
+                        .map(GrantedAuthority::getAuthority).toList())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
                 .signWith(key(), SignatureAlgorithm.HS256)
@@ -38,10 +52,18 @@ public class JwtUtils {
     }
 
     public String generateJwtTokenFromEmail(String email) {
+        UserEntity user = userRepository.findUserByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        List<String> rolesAsStrings = user.getRoles().stream()
+                .map(Enum::name) // pl. ROLE_USER -> "ROLE_USER"
+                .toList();
+
         return Jwts.builder()
-                .setSubject(email)
+                .setSubject(user.getEmail())
+                .claim("roles", rolesAsStrings)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
+                .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
                 .signWith(key(), SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -51,8 +73,26 @@ public class JwtUtils {
     }
 
     public String getUserNameFromJwtToken(String token) {
-        return Jwts.parserBuilder().setSigningKey(key()).build()
-                .parseClaimsJws(token).getBody().getSubject();
+        return Jwts.parserBuilder()
+                .setSigningKey(key())
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
+    }
+
+    public List<Role> getRolesFromJwtToken(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(key())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+
+        List<String> rolesAsStrings = claims.get("roles", List.class);
+
+        return rolesAsStrings.stream()
+                .map(Role::valueOf)
+                .toList();
     }
 
     public boolean validateJwtToken(String authToken) {

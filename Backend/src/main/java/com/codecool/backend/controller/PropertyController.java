@@ -1,12 +1,15 @@
 package com.codecool.backend.controller;
 
+import com.codecool.backend.controller.dto.FixedOptionsDTO;
+import com.codecool.backend.controller.dto.PropertyDTO;
+import com.codecool.backend.model.Condition;
 import com.codecool.backend.model.Property;
+import com.codecool.backend.model.PropertyType;
 import com.codecool.backend.service.PropertyService;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Page;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -20,7 +23,18 @@ public class PropertyController {
     }
 
     @GetMapping("/all")
-    public List<Property> getAllProperty() {
-        return propertyService.getAllProperty();
+    public Page<PropertyDTO> getItems(@RequestParam(defaultValue = "0") int page,
+                                   @RequestParam(defaultValue = "10") int size) {
+        return propertyService.getAllProperty(page, size);
+    }
+
+    @GetMapping("/options")
+    public FixedOptionsDTO getFixedOptions(){
+        return propertyService.getFixedOptions();
+    }
+
+    @PostMapping("/upload")
+    public void uploadProperty(@RequestBody PropertyDTO property){
+        propertyService.uploadProperty(property);
     }
 }

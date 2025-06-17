@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { customFetch } from '../services/fetch';
+import { customFetch } from '../utils/fetch';
 import Toast from './Toast';
 
 interface UserCredentials {

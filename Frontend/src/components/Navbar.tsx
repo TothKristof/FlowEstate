@@ -4,10 +4,10 @@ function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="rounded-full backdrop-blur-sm bg-white/30 shadow-lg relative">
+    <div className="rounded-full backdrop-blur-sm bg-white/30 shadow-lg relative h-10">
       {/* Hamburger menü gomb - csak kis képernyőkön látható */}
       <button
-        className="sm:hidden px-4 py-2 text-gray-700 focus:outline-none z-20"
+        className="sm:hidden px-4 text-gray-700 focus:outline-none z-20 flex items-center"
         onClick={() => setIsOpen(!isOpen)}
       >
         <div className="space-y-1">
@@ -18,7 +18,7 @@ function Navbar() {
       </button>
 
       {/* Menü elemek - alapértelmezés szerint látható, kis képernyőn elrejtve */}
-      <div className={`flex ${isOpen ? 'flex-col absolute top-full left-0 w-full bg-white/30' : 'hidden sm:flex'} justify-between p-2`}>
+      <div className={`flex ${isOpen ? 'flex-col absolute top-full left-0 w-full bg-white/30' : 'hidden sm:flex'} justify-between `}>
         <button className="px-6 py-2 rounded-full bg-transparent hover:bg-black hover:text-white transition-all duration-200">
           Home
         </button>

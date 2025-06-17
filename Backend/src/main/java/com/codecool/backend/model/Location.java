@@ -17,9 +17,19 @@ public class Location {
     @Id
     @GeneratedValue
     private Long id;
-    private String country;
     private String city;
     private String street;
     private String houseNumber;
     private int zipCode;
+
+    @Override
+    public String toString() {
+        return "Location{" +
+                "id=" + id +
+                ", city='" + city + '\'' +
+                ", street='" + street + '\'' +
+                ", houseNumber='" + houseNumber + '\'' +
+                ", zipCode=" + zipCode +
+                '}';
+    }
 }
