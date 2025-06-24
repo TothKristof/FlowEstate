@@ -11,6 +11,6 @@ export function priceConverter(price: number, forSale: boolean): string {
     formatted = `${price}`;
   }
 
-  const suffix = forSale ? 'Ft' : 'Ft / hó';
+  const suffix = forSale ? 'Ft' : 'Ft / month';
   return `${formatted} ${suffix}`;
 }

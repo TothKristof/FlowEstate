@@ -2,6 +2,7 @@ package com.codecool.backend.controller;
 
 import com.codecool.backend.controller.dto.FixedOptionsDTO;
 import com.codecool.backend.controller.dto.PropertyDTO;
+import com.codecool.backend.controller.dto.PropertyFilterDTO;
 import com.codecool.backend.model.Condition;
 import com.codecool.backend.model.Property;
 import com.codecool.backend.model.PropertyType;
@@ -24,8 +25,15 @@ public class PropertyController {
 
     @GetMapping("/all")
     public Page<PropertyDTO> getItems(@RequestParam(defaultValue = "0") int page,
-                                   @RequestParam(defaultValue = "10") int size) {
+                                      @RequestParam(defaultValue = "10") int size) {
         return propertyService.getAllProperty(page, size);
+    }
+
+    @PostMapping("/filtered")
+    public Page<PropertyDTO> getItems(@RequestParam(defaultValue = "0") int page,
+                                      @RequestParam(defaultValue = "10") int size,
+                                      @RequestBody(required = false)PropertyFilterDTO filter) {
+        return propertyService.getFilteredProperty(page, size,filter);
     }
 
     @GetMapping("/options")

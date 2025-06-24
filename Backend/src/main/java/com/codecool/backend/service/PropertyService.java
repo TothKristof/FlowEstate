@@ -2,6 +2,7 @@ package com.codecool.backend.service;
 
 import com.codecool.backend.controller.dto.FixedOptionsDTO;
 import com.codecool.backend.controller.dto.PropertyDTO;
+import com.codecool.backend.controller.dto.PropertyFilterDTO;
 import com.codecool.backend.model.*;
 import com.codecool.backend.repository.LocationRepository;
 import com.codecool.backend.repository.PropertyRepository;
@@ -11,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -30,7 +32,9 @@ public class PropertyService {
 
     public Page<PropertyDTO> getAllProperty(int page, int size){
         Pageable pageable = PageRequest.of(page, size);
-        return propertyRepository.findAll(pageable).map(PropertyDTO::new);
+
+        return propertyRepository.findAll(pageable)
+                .map(PropertyDTO::new);
     }
 
     public FixedOptionsDTO getFixedOptions() {
@@ -75,4 +79,11 @@ public class PropertyService {
         propertyRepository.save(newProperty);
     }
 
+    public Page<PropertyDTO> getFilteredProperty(int page, int size, PropertyFilterDTO filter){
+        Pageable pageable = PageRequest.of(page, size);
+        Specification<Property> spec = PropertySpecification.withFilters(filter);
+
+        return propertyRepository.findAll(spec, pageable)
+                .map(PropertyDTO::new);
+    }
 }

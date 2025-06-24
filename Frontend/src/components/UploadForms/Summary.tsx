@@ -1,6 +1,10 @@
-import React from "react";
+import type { Property } from "../../utils/types/Property";
 
-function Summary({ propertyDetails }) {
+interface SummaryProps{
+  propertyDetails: Property
+}
+
+function Summary({ propertyDetails }:SummaryProps) {
   if (!propertyDetails) return null;
 
   const {

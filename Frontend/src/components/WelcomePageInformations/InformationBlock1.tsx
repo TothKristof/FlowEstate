@@ -1,4 +1,3 @@
-import React from "react";
 
 function InformationBlock1() {
   return (

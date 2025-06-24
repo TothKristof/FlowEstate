@@ -1,16 +1,15 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import Brand from "./Brand";
 
 function LoggedInLayout() {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
-  const menuRef = useRef();
+  const menuRef = useRef<HTMLDivElement>(null);
 
-  // Ha kattintasz máshova, zárja be a menüt
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
         setOpen(false);
       }
     };
@@ -72,8 +71,6 @@ function LoggedInLayout() {
           </div>
         </div>
       </div>
-
-      {/* Outlet tartalom */}
       <div className="mt-[-60px]">
         <Outlet />
       </div>

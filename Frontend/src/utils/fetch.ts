@@ -1,7 +1,7 @@
 interface FetchStructure {
     path: string;
     method: string;
-    body?: any;
+    body?: object;
     jwt?: string | null;
 }
 
@@ -29,6 +29,9 @@ export const customFetch = async (req: FetchStructure) => {
     try {
         const response = await fetch(`/api/${path}`, options);
         if (!response.ok) {
+            if(response.status === 401){
+                window.location.href = "http://localhost:5173/login";
+            }
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         

@@ -1,4 +1,5 @@
-export async function uploadImagesToCloudinary(files) {
+export async function uploadImagesToCloudinary(files:File[]) {
+  console.log("🚀 ~ uploadImagesToCloudinary ~ files:", files)
   const uploadedUrls = [];
 
   for (const file of files) {

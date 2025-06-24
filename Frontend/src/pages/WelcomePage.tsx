@@ -1,4 +1,3 @@
-
 import InformationBlock1 from "../components/WelcomePageInformations/InformationBlock1";
 import InformationBlock2 from "../components/WelcomePageInformations/InformationBlock2";
 import InformationBlock3 from "../components/WelcomePageInformations/InformationBlock3";

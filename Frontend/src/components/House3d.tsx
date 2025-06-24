@@ -1,8 +1,6 @@
-import React from 'react'
 import Spline from '@splinetool/react-spline';
 
 function House3d() {
-    // Add timestamp to force fresh load
     const timestamp = new Date().getTime();
     const sceneUrl = `https://prod.spline.design/Bl1J2VR9XTYkL4Nt/scene.splinecode?t=${timestamp}`;
   

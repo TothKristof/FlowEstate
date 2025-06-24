@@ -1,4 +1,3 @@
-import React from 'react';
 import Brand from '../components/Brand';
 import LoginPic from "../assets/loginPic.avif";
 import RegistrationForm from '../components/RegistrationForm';

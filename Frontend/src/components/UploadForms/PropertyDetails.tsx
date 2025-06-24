@@ -1,25 +1,37 @@
-import React from "react";
-import { useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { priceConverter } from "../../utils/priceConverter";
+import type { Property } from "../../utils/types/Property";
+
+interface PropertyDetailsProps {
+  handleChange: (field: string, value: string | number | boolean | null) => void;
+  conditions: string[];
+  propertyTypes: string[];
+  propertyDetails: Property;
+}
 
 function PropertyDetails({
-  step_name,
   handleChange,
   conditions,
   propertyTypes,
   propertyDetails,
-}) {
+}: PropertyDetailsProps) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const dropdownRef = useRef(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const handleConditionClick = (condition) => {
+  const handleConditionClick = (condition: string) => {
     handleChange("condition", condition);
     setIsDropdownOpen(false);
   };
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    const numericFields = ["area", "price", "room_count"];
+    const convertedValue = numericFields.includes(name) ? (value === "" ? null : parseFloat(value)) : value;
+    handleChange(name, convertedValue);
+  };
+
   return (
-    <fieldset className="fieldset mx-auto my-2 rounded-box  flex justify-center border">
-      <legend className="fieldset-legend">{step_name}</legend>
+    <fieldset className="fieldset mx-auto my-2 rounded-box flex justify-center border">
       <div className="flex w-full p-2">
         <div className="basis-6/12">
           <div className="basis-1/3 m-2">
@@ -28,8 +40,9 @@ function PropertyDetails({
               type="number"
               className="input border border-gray-300 rounded-lg p-2 w-full"
               placeholder="86"
-              value={propertyDetails.area}
-              onChange={(e) => handleChange("area", e.target.value)}
+              value={propertyDetails.area ?? ""}
+              onChange={handleInputChange}
+              name="area"
             />
           </div>
 
@@ -38,11 +51,10 @@ function PropertyDetails({
             <input
               type="month"
               className="input border border-gray-300 rounded-lg p-2 w-full"
-              placeholder="2000-februar"
-              value={propertyDetails.built_year}
-              onChange={(e) =>
-                handleChange("built_year", e.target.value.slice(0, 4))
-              }
+              placeholder="2000-02"
+              value={propertyDetails.built_year ?? ""}
+              onChange={(e) => handleChange("built_year", e.target.value.slice(0, 4))}
+              name="built_year"
             />
           </div>
 
@@ -52,10 +64,15 @@ function PropertyDetails({
               type="number"
               className="input border border-gray-300 rounded-lg p-2 w-full"
               placeholder="8600000"
-              value={propertyDetails.price}
-              onChange={(e) => handleChange("price", e.target.value)}
+              value={propertyDetails.price ?? ""}
+              onChange={handleInputChange}
+              name="price"
             />
-            <p className="m-2 text-xl w-full text-right">{propertyDetails.price && priceConverter(propertyDetails.price, propertyDetails.sell)}</p>
+            <p className="m-2 text-xl w-full text-right">
+              {propertyDetails.price !== null && propertyDetails.sell !== null
+                ? priceConverter(propertyDetails.price, propertyDetails.sell)
+                : ""}
+            </p>
           </div>
 
           <div className="basis-1/3 m-2">
@@ -67,11 +84,9 @@ function PropertyDetails({
                     <button
                       key={condition}
                       className={`btn btn-sm ${
-                        propertyDetails.condition == condition
-                          ? `btn-success`
-                          : "btn-outline"
+                        propertyDetails.condition === condition ? `btn-success` : "btn-outline"
                       }`}
-                      onClick={() => handleChange("condition", condition)}
+                      onClick={() => handleConditionClick(condition)}
                     >
                       {condition}
                     </button>
@@ -93,9 +108,7 @@ function PropertyDetails({
                             <button
                               key={condition}
                               className={`block w-full text-left px-4 py-2 btn ${
-                                propertyDetails.condition == condition
-                                  ? `btn-success`
-                                  : ""
+                                propertyDetails.condition === condition ? `btn-success` : ""
                               }`}
                               onClick={() => handleConditionClick(condition)}
                             >
@@ -118,25 +131,22 @@ function PropertyDetails({
               type="number"
               className="input border border-gray-300 rounded-lg p-2 w-full"
               placeholder="3"
-              value={propertyDetails.room_count}
-              onChange={(e) => handleChange("room_count", e.target.value)}
+              value={propertyDetails.room_count ?? ""}
+              onChange={handleInputChange}
+              name="room_count"
             />
           </div>
           <div className="basis-1/3 m-2">
             <legend className="fieldset-legend">Rent or Sell</legend>
             <div className="flex gap-4">
               <button
-                className={`btn btn-xl ${
-                  propertyDetails.sell ? "btn-success" : "btn-outline"
-                }`}
+                className={`btn btn-xl ${propertyDetails.sell ? "btn-success" : "btn-outline"}`}
                 onClick={() => handleChange("sell", true)}
               >
                 Sell
               </button>
               <button
-                className={`btn btn-xl ${
-                  !propertyDetails.sell ? "btn-success" : "btn-outline"
-                }`}
+                className={`btn btn-xl ${!propertyDetails.sell ? "btn-success" : "btn-outline"}`}
                 onClick={() => handleChange("sell", false)}
               >
                 Rent
@@ -151,9 +161,7 @@ function PropertyDetails({
                 <button
                   key={propertyType}
                   className={`btn btn-sm ${
-                    propertyDetails.property_type == propertyType
-                      ? `btn-success`
-                      : "btn-outline"
+                    propertyDetails.property_type === propertyType ? `btn-success` : "btn-outline"
                   }`}
                   onClick={() => handleChange("property_type", propertyType)}
                 >

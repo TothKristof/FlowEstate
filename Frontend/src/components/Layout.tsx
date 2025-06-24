@@ -1,4 +1,3 @@
-import React from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import Brand from "./Brand";
 import Navbar from "./Navbar";

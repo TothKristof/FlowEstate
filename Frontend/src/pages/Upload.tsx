@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Gradient from "../assets/gradient.png";
 import { ArrowLeft, ArrowRight} from "lucide-react";
 import PersonalData from "../components/UploadForms/PersonalDetailsForm";
@@ -8,32 +8,14 @@ import PictureSelect from "../components/UploadForms/PictureSelectForm";
 import Summary from "../components/UploadForms/Summary";
 import "../styling/update.css";
 import { customFetch } from "../utils/fetch";
-
-interface propertyDetails {
-  owner_name: string;
-  owner_phone: number;
-  area: number;
-  built_year: number;
-  price: number;
-  room_count: number;
-  sell: boolean;
-  condition: string;
-  property_type: string;
-  location: Location;
-}
-
-interface Location {
-  city: string;
-  street: string;
-  house_number: string;
-  zip_code: number;
-}
+import type { Property } from "../utils/types/Property";
 
 function Upload() {
   const [step, setStep] = useState(1);
-  const [conditions, setConditions] = useState(null);
-  const [propertyTypes, setPropertyTypes] = useState(null);
-  const [propertyDetails, setPropertyDetails] = useState({
+  const [conditions, setConditions] = useState<string[] | null>(null);
+  const [propertyTypes, setPropertyTypes] = useState<string[] | null>(null);
+  const [propertyDetails, setPropertyDetails] = useState<Property>({
+    id: null,
     owner_name: null,
     owner_phone: null,
     area: null,
@@ -53,14 +35,16 @@ function Upload() {
   });
 
   
-  const handleChange = (field: string, value: string | number) => {
+  const handleChange = (field: string, value: string | number | boolean | null | string[]) => {
     setPropertyDetails((prev) => {
       if (field.includes(".")) {
         const [parent, child] = field.split(".");
-        return {
-          ...prev,
-          [parent]: { ...prev[parent], [child]: value },
-        };
+        if (parent === "location" && child in prev.location) {
+          return {
+            ...prev,
+            location: { ...prev.location, [child]: value },
+          };
+        }
       }
       return { ...prev, [field]: value };
     });
@@ -70,7 +54,7 @@ function Upload() {
     { label: "Personal Data", element: <PersonalData handleChange={handleChange} propertyDetails={propertyDetails} /> },
     { 
       label: "Property Details", 
-      element: <PropertyDetails handleChange={handleChange} propertyDetails={propertyDetails} conditions={conditions} propertyTypes={propertyTypes} /> 
+      element: <PropertyDetails handleChange={handleChange} propertyDetails={propertyDetails} conditions={conditions ?? []} propertyTypes={propertyTypes ?? []} /> 
     },
     { label: "Location", element: <LocationDetails handleChange={handleChange} propertyDetails={propertyDetails} /> },
     { label: "Pictures", element: <PictureSelect propertyDetails={propertyDetails} handleChange={handleChange} /> },
@@ -89,7 +73,7 @@ function Upload() {
     });
   }, []);
 
-  function uploadProperty(property: propertyDetails) {
+  function uploadProperty(property: Property) {
     customFetch({
       path: "property/upload",
       method: "POST",

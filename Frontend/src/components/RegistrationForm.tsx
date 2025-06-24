@@ -89,6 +89,7 @@ function RegistrationForm() {
         type: 'error',
         message: 'An error occurred during registration.',
       });
+      console.log(error);
       setTimeout(() => {
         setToast((prev) => ({ ...prev, isVisible: false }));
       }, 3000);
