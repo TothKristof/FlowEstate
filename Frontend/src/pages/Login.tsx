@@ -15,7 +15,7 @@ function Login() {
     >
       <div className="md:w-3/4 h-[75%] flex bg-white/90 rounded-[1rem] shadow-2xl">
         <div className="w-1/2 overflow-hidden relative hidden xl:block">
-          <div className="absolute top-4 left-4 z-10">
+          <div className="absolute top-[-40px] left-4 z-10">
             <Brand></Brand>
           </div>
           <img

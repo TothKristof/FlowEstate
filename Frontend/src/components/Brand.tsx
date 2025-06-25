@@ -1,12 +1,11 @@
-import { House } from "lucide-react";
+import Logo from "../assets/logo.svg";
 
 function Brand() {
   return (
     <div className="flex cursor-pointer">
       <div className="flex">
-        <House size={30} className="w-[45px] h-[45px]" strokeWidth={2} />
+        <img src={Logo} alt="Logo" className="w-[150px] h-[150px]" />
       </div>
-      <h1 className="px-2 my-auto xl:text-xl">Flow Estate</h1>
     </div>
   )
 }
