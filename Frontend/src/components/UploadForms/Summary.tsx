@@ -1,10 +1,10 @@
 import type { Property } from "../../utils/types/Property";
+import { useFormContext } from "react-hook-form";
 
-interface SummaryProps{
-  propertyDetails: Property
-}
+function Summary() {
+  const { watch } = useFormContext<Property>();
+  const propertyDetails = watch();
 
-function Summary({ propertyDetails }:SummaryProps) {
   if (!propertyDetails) return null;
 
   const {
