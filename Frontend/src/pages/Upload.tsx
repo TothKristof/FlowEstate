@@ -9,56 +9,34 @@ import Summary from "../components/UploadForms/Summary";
 import "../styling/update.css";
 import { customFetch } from "../utils/fetch";
 import type { Property } from "../utils/types/Property";
+import { useForm, FormProvider } from "react-hook-form";
 
 function Upload() {
+  const methods = useForm<Property>({
+    mode: "onChange",
+  });
+  const { trigger } = methods;
   const [step, setStep] = useState(1);
   const [conditions, setConditions] = useState<string[] | null>(null);
   const [propertyTypes, setPropertyTypes] = useState<string[] | null>(null);
-  const [propertyDetails, setPropertyDetails] = useState<Property>({
-    id: null,
-    owner_name: null,
-    owner_phone: null,
-    area: null,
-    built_year: null,
-    price: null,
-    room_count: null,
-    sell: true,
-    condition: null,
-    property_type: null,
-    location: {
-      city: "",
-      street: "",
-      houseNumber: "",
-      zipCode: 0,
-    },
-    imageUrls: null
-  });
+  const stepFields: string[][] = [
+    ["owner_name", "owner_phone"],
+    ["area", "condition", "price", "room_count", "property_type", "sell", "built_year"],
+    ["location.city", "location.street", "location.houseNumber", "location.zipCode"],
+    ["imageUrls"],
+    []
+  ];
 
-  
-  const handleChange = (field: string, value: string | number | boolean | null | string[]) => {
-    setPropertyDetails((prev) => {
-      if (field.includes(".")) {
-        const [parent, child] = field.split(".");
-        if (parent === "location" && child in prev.location) {
-          return {
-            ...prev,
-            location: { ...prev.location, [child]: value },
-          };
-        }
-      }
-      return { ...prev, [field]: value };
-    });
-  };
 
   const steps = [
-    { label: "Personal Data", element: <PersonalData handleChange={handleChange} propertyDetails={propertyDetails} /> },
+    { label: "Personal Data", element: <PersonalData/> },
     { 
       label: "Property Details", 
-      element: <PropertyDetails handleChange={handleChange} propertyDetails={propertyDetails} conditions={conditions ?? []} propertyTypes={propertyTypes ?? []} /> 
+      element: <PropertyDetails conditions={conditions ?? []} propertyTypes={propertyTypes ?? []} /> 
     },
-    { label: "Location", element: <LocationDetails handleChange={handleChange} propertyDetails={propertyDetails} /> },
-    { label: "Pictures", element: <PictureSelect propertyDetails={propertyDetails} handleChange={handleChange} /> },
-    { label: "Summary", element: <Summary propertyDetails={propertyDetails} /> },
+    { label: "Location", element: <LocationDetails /> },
+    { label: "Pictures", element: <PictureSelect/> },
+    { label: "Summary", element: <Summary /> },
   ];
 
   useEffect(() => {
@@ -84,55 +62,68 @@ function Upload() {
 
 
   return (
-    <div
-      className="h-[105dvh] bg-center bg-cover flex justify-center items-center"
-      style={{ backgroundImage: `url(${Gradient})` }}
-    >
-      <div className="w-[70%] bg-white shadow-sm md:p-2 rounded-[1rem] h-150 flex-col justify-between">
-        <div className="w-full flex h-20">
-          <ul className="steps mx-auto steps-vertical md:steps-horizontal">
-            {steps.map((s, index) => (
-              <li
-                key={index}
-                className={`step ${step > index ? "step-success" : ""}`}
+    <FormProvider {...methods}>
+      <form>
+        <div
+          className="h-[105dvh] bg-center bg-cover flex justify-center items-center"
+          style={{ backgroundImage: `url(${Gradient})` }}
+        >
+          <div className="w-[70%] bg-white shadow-sm md:p-2 rounded-[1rem] h-150 flex-col justify-between">
+            <div className="w-full flex h-20">
+              <ul className="steps mx-auto steps-vertical md:steps-horizontal">
+                {steps.map((s, index) => (
+                  <li
+                    key={index}
+                    className={`step ${step > index ? "step-success" : ""}`}
+                  >
+                    {s.label}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="h-110 flex items-center justify-center">
+              <div className="formdiv">
+                {steps[step - 1].element}
+              </div>
+            </div>
+            <div className="flex justify-end items-center h-20">
+              <button
+                type="button"
+                className="btn btn-neutral rounded-full h-10 w-10 p-0 m-2"
+                onClick={() => setStep(step - 1)}
+                disabled={step <= 1}
               >
-                {s.label}
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div className="h-110 flex items-center justify-center">
-          <div className="formdiv">
-            {steps[step - 1].element}
+                <ArrowLeft />
+              </button>
+              {step !== steps.length ? (
+                <button
+                  type="button"
+                  className="btn btn-neutral rounded-full h-10 w-10 p-0"
+                  onClick={async () => {
+                    const valid = await trigger(stepFields[step - 1]);
+                    console.log("🚀 ~ valid:", valid);
+                    if (valid) {
+                      setStep(step + 1);
+                    }
+                  }}
+                  disabled={step >= steps.length}
+                >
+                  <ArrowRight />
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={methods.handleSubmit(uploadProperty)}
+                  className="btn btn-success rounded-[2rem] w-30"
+                >
+                  Upload
+                </button>
+              )}
+            </div>
           </div>
         </div>
-        <div className="flex justify-end items-center h-20">
-          <button
-            className="btn btn-neutral rounded-full h-10 w-10 p-0 m-2"
-            onClick={() => setStep(step - 1)}
-            disabled={step <= 1}
-          >
-            <ArrowLeft />
-          </button>
-          {step !== steps.length ? (
-            <button
-              className="btn btn-neutral rounded-full h-10 w-10 p-0"
-              onClick={() => setStep(step + 1)}
-              disabled={step >= steps.length}
-            >
-              <ArrowRight />
-            </button>
-          ) : (
-            <button
-              className="btn btn-success rounded-[2rem] w-30"
-              onClick={() => uploadProperty(propertyDetails)}
-            >
-              Upload
-            </button>
-          )}
-        </div>
-      </div>
-    </div>
+      </form>
+    </FormProvider>
   );
 }
 

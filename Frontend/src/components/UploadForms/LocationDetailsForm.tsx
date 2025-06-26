@@ -1,10 +1,8 @@
 import type { Property } from "../../utils/types/Property";
+import { useFormContext } from "react-hook-form";
 
-interface LocationDetailsFormProps{
-  handleChange: (field: string, value: string | number) => void,
-  propertyDetails: Property
-}
-function LocationDetailsForm({handleChange, propertyDetails }:LocationDetailsFormProps) {
+function LocationDetailsForm() {
+  const { register, formState: { errors } } = useFormContext<Property>();
   return (
     <fieldset className="fieldset mx-auto my-2 rounded-box w-xs border p-4">
       <div className="basis-3/12 m-2">
@@ -13,9 +11,9 @@ function LocationDetailsForm({handleChange, propertyDetails }:LocationDetailsFor
           type="text"
           className="input"
           placeholder="London"
-          value={ propertyDetails.location.city  ?? ""}
-          onChange={(e) => handleChange("location.city", e.target.value)}
+          {...register("location.city", { required: "City is required" })}
         />
+        {errors.location?.city && <span className="text-red-500 p-1 text-sm">{errors.location.city.message}</span>}
       </div>
 
       <div className="basis-3/12 m-2">
@@ -24,9 +22,9 @@ function LocationDetailsForm({handleChange, propertyDetails }:LocationDetailsFor
           type="text"
           className="input"
           placeholder="Something street"
-          value={propertyDetails.location.street  ?? ""}
-          onChange={(e) => handleChange("location.street", e.target.value)}
+          {...register("location.street", { required: "Street is required" })}
         />
+        {errors.location?.street && <span className="text-red-500 p-1 text-sm">{errors.location.street.message}</span>}
       </div>
 
       <div className="basis-3/12 m-2 flex gap-2">
@@ -36,11 +34,9 @@ function LocationDetailsForm({handleChange, propertyDetails }:LocationDetailsFor
             type="number"
             className="input"
             placeholder="23"
-            value={propertyDetails.location.houseNumber  ?? ""}
-            onChange={(e) =>
-              handleChange("location.houseNumber", e.target.value)
-            }
+            {...register("location.houseNumber", { required: "House number is required" })}
           />
+          {errors.location?.houseNumber && <span className="text-red-500 p-1 text-sm">{errors.location.houseNumber.message}</span>}
         </div>
         <div>
           <legend className="fieldset-legend">Zip Code</legend>
@@ -48,9 +44,9 @@ function LocationDetailsForm({handleChange, propertyDetails }:LocationDetailsFor
             type="number"
             className="input"
             placeholder="1204"
-            value={propertyDetails.location.zipCode ?? ""}
-            onChange={(e) => handleChange("location.zipCode", e.target.value)}
+            {...register("location.zipCode", { required: "Zip code is required" })}
           />
+          {errors.location?.zipCode && <span className="text-red-500 p-1 text-sm">{errors.location.zipCode.message}</span>}
         </div>
       </div>
     </fieldset>

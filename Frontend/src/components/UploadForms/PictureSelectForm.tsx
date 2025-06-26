@@ -3,23 +3,20 @@ import { PlusCircle } from "lucide-react";
 import { uploadImagesToCloudinary } from "../../utils/imageUpload";
 import "daisyui";
 import type { Property } from "../../utils/types/Property";
+import { useFormContext } from "react-hook-form";
 
-interface PictureSelectFormProps{
-  handleChange: (field: string, value: string | number | string[]) => void,
-  propertyDetails: Property;
-}
-
-function PictureSelectForm({ propertyDetails, handleChange }: PictureSelectFormProps) {
+function PictureSelectForm() {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { setValue, watch } = useFormContext<Property>();
+  const imageUrls = watch("imageUrls") || [];
 
   async function selectImage(event: React.ChangeEvent<HTMLInputElement>) {
     const files = event.target.files;
-    if (!files || files.length === 0) return;
+    if (!files || files.length === 0) return; 
 
     const urls = await uploadImagesToCloudinary(Array.from(files));
-
-    const updatedUrls = [...(propertyDetails.imageUrls || []), ...urls];
-    handleChange("imageUrls", updatedUrls);
+    const updatedUrls = [...imageUrls, ...urls];
+    setValue("imageUrls", updatedUrls);
   }
 
   return (
@@ -42,9 +39,9 @@ function PictureSelectForm({ propertyDetails, handleChange }: PictureSelectFormP
         />
 
         {/* Carousel */}
-        {propertyDetails.imageUrls && propertyDetails.imageUrls.length > 0 && (
+        {imageUrls.length > 0 && (
           <div className="carousel carousel-center rounded-box w-full max-w-md">
-            {propertyDetails.imageUrls.map((url:string, index:number) => (
+            {imageUrls.map((url:string, index:number) => (
               <div key={index} className="carousel-item">
                 <img src={url} alt={`image-${index}`} className="w-90 h-60 object-cover rounded-xl m-1" />
               </div>
