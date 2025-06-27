@@ -1,22 +1,15 @@
 import { priceConverter } from "../utils/priceConverter";
 import type { Property } from "../utils/types/Property";
+import { Link } from "react-router-dom";
 
 interface PropertyBlockProps {
   property: Property;
 }
 
 function PropertyBlock({ property }: PropertyBlockProps) {
-  const {
-    price,
-    built_year,
-    location,
-    imageUrls,
-    sell,
-    room_count,
-    area,
-  } = property;
+  const {id, price, built_year, location, imageUrls, sell, room_count, area } =
+    property;
 
-  
   const imageSrc =
     imageUrls && imageUrls.length > 0
       ? imageUrls[0]
@@ -30,7 +23,10 @@ function PropertyBlock({ property }: PropertyBlockProps) {
   return (
     <div className="sm:flex-col md:flex-row md:flex border-success border-3 border rounded-[1.2rem] my-2 p-2 gap-2">
       <div className="basis-6/12">
-        <div className="relative w-full h-full" style={{ aspectRatio: "4 / 2" }}>
+        <div
+          className="relative w-full h-full"
+          style={{ aspectRatio: "4 / 2" }}
+        >
           <img
             className="rounded-[1rem] w-full h-full object-cover"
             src={imageSrc}
@@ -46,11 +42,15 @@ function PropertyBlock({ property }: PropertyBlockProps) {
         </div>
         <div className="mt-2">
           <p className="font-bold text-4xl">
-            {price !== null && sell !== null ? priceConverter(price, sell) : "N/A"}
+            {price !== null && sell !== null
+              ? priceConverter(price, sell)
+              : "N/A"}
           </p>
           <h3 className="text-stone-500 text-md">
             {city || street || houseNumber
-              ? `${city}${city && (street || houseNumber) ? ", " : ""}${street} ${houseNumber}`.trim()
+              ? `${city}${
+                  city && (street || houseNumber) ? ", " : ""
+                }${street} ${houseNumber}`.trim()
               : "Location not specified"}
           </h3>
         </div>
@@ -71,9 +71,11 @@ function PropertyBlock({ property }: PropertyBlockProps) {
           </div>
         </div>
         <div className="mt-3">
-          <button className="btn btn-success w-full rounded-full font-bold text-center">
-            View Property
-          </button>
+          <Link to={`/main/property/${id}`}>
+            <button className="btn btn-success w-full rounded-full font-bold text-center">
+              View Property
+            </button>
+          </Link>
         </div>
       </div>
     </div>

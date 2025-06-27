@@ -1,5 +1,6 @@
 package com.codecool.backend.controller;
 
+import com.codecool.backend.exception.PropertyNotFound;
 import com.codecool.backend.exception.RegistrationError;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -13,6 +14,13 @@ public class ExceptionAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(RegistrationError.class)
     public String illegalRequestParameterExceptionHandler(RegistrationError exception) {
+        return exception.getMessage();
+    }
+
+    @ResponseBody
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(PropertyNotFound.class)
+    public String propertyNotFoundExceptionHandler(PropertyNotFound exception) {
         return exception.getMessage();
     }
 }

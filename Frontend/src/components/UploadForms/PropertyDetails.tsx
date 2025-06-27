@@ -196,9 +196,6 @@ function PropertyDetails({
                   setValue("sell", true);
                   trigger("sell");
                 }}
-                {...register("sell", {
-                  validate: v => v === true || v === false || "Sell or rent is required"
-                })}
               >
                 Sell
               </button>
@@ -209,9 +206,6 @@ function PropertyDetails({
                     setValue("sell", false);
                     trigger("sell");
                   }}
-                  {...register("sell", {
-                    validate: v => v === true || v === false || "Sell or rent is required"
-                  })}
               >
                 Rent
               </button>

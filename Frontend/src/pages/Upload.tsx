@@ -10,8 +10,10 @@ import "../styling/update.css";
 import { customFetch } from "../utils/fetch";
 import type { Property } from "../utils/types/Property";
 import { useForm, FormProvider } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 
 function Upload() {
+  const navigate = useNavigate();
   const methods = useForm<Property>({
     mode: "onChange",
   });
@@ -57,6 +59,9 @@ function Upload() {
       method: "POST",
       body: property,
       jwt: localStorage.getItem("jwt"),
+    }).then(response => {
+      console.log("🚀 ~ uploadProperty ~ response:", response.data)
+      navigate(`/main/property/${response.data}`);
     });
   }
 

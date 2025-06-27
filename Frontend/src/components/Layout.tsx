@@ -7,7 +7,7 @@ function Layout() {
   return (
 <div className="">
   {/* Navbar */}
-  <div className="pt-2 left-0 w-full h-[50px] flex items-center bg-white z-10 shadow-md">
+  <div className="pt-2 left-0 w-full h-[50px] flex items-center bg-white z-10 ">
     <div className="w-1/4 flex justify-start ms-4" onClick={() => navigate("/")}>
       <Brand />
     </div>

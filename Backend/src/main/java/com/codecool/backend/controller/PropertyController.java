@@ -23,6 +23,11 @@ public class PropertyController {
         this.propertyService = propertyService;
     }
 
+    @GetMapping
+    public PropertyDTO getPropertyById(@RequestParam("id")Long id){
+        return propertyService.getPropertyById(id);
+    }
+
     @GetMapping("/all")
     public Page<PropertyDTO> getItems(@RequestParam(defaultValue = "0") int page,
                                       @RequestParam(defaultValue = "10") int size) {
@@ -42,7 +47,7 @@ public class PropertyController {
     }
 
     @PostMapping("/upload")
-    public void uploadProperty(@RequestBody PropertyDTO property){
-        propertyService.uploadProperty(property);
+    public Long uploadProperty(@RequestBody PropertyDTO property){
+        return propertyService.uploadProperty(property);
     }
 }

@@ -3,6 +3,7 @@ package com.codecool.backend.service;
 import com.codecool.backend.controller.dto.FixedOptionsDTO;
 import com.codecool.backend.controller.dto.PropertyDTO;
 import com.codecool.backend.controller.dto.PropertyFilterDTO;
+import com.codecool.backend.exception.PropertyNotFound;
 import com.codecool.backend.model.*;
 import com.codecool.backend.repository.LocationRepository;
 import com.codecool.backend.repository.PropertyRepository;
@@ -43,7 +44,7 @@ public class PropertyService {
         return new FixedOptionsDTO(conditions,propertyTypes);
     }
 
-    public void uploadProperty(PropertyDTO property) {
+    public Long uploadProperty(PropertyDTO property) {
         logger.info(property.toString());
         logger.info(property.location().toString());
 
@@ -76,7 +77,7 @@ public class PropertyService {
             newProperty.setImages(images);
         }
 
-        propertyRepository.save(newProperty);
+        return propertyRepository.save(newProperty).getId();
     }
 
     public Page<PropertyDTO> getFilteredProperty(int page, int size, PropertyFilterDTO filter){
@@ -85,5 +86,10 @@ public class PropertyService {
 
         return propertyRepository.findAll(spec, pageable)
                 .map(PropertyDTO::new);
+    }
+
+    public PropertyDTO getPropertyById(Long id) {
+        Property searchedProperty = propertyRepository.findById(id).orElseThrow(PropertyNotFound::new);
+        return new PropertyDTO(searchedProperty);
     }
 }

@@ -9,6 +9,7 @@ import Registration from "./pages/Registration";
 import MainPage from "./pages/MainPage";
 import LoggedInLayout from "./components/LoggedInLayout";
 import Upload from "./pages/Upload";
+import PropertyView from "./pages/PropertyView";
 
 import "./main.css";
 
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
       {
         path: "/main/upload",
         element: <Upload></Upload>,
+      },
+      {
+        path: "/main/property/:id",
+        element: <PropertyView></PropertyView>
       },
     ],
   },
