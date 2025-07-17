@@ -70,7 +70,7 @@ public class WebSecurityConfig {
                         auth
                                 .requestMatchers("/api/user/login", "/api/user/register").permitAll()
                                 .requestMatchers("/api/user/{id}").hasRole("ADMIN")
-                                .requestMatchers("/api/property/**").hasRole("USER")
+                                .requestMatchers("/api/property/**").permitAll()  //.hasRole("USER")
                                 .requestMatchers("/oauth2/**", "/error").permitAll()
                                 .anyRequest().authenticated()
                 );

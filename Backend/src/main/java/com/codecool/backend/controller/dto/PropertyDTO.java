@@ -15,8 +15,8 @@ public record PropertyDTO(
         double price,
         int room_count,
         boolean sell,
-        Condition condition,
-        @JsonProperty("property_type") PropertyType propertyType,
+        String condition,
+        @JsonProperty("property_type") String propertyType,
         LocationDTO location,
         List<String> imageUrls
 ) {
@@ -30,8 +30,8 @@ public record PropertyDTO(
                 property.getPrice(),
                 property.getRoomCount(),
                 property.isSell(),
-                property.getCondition(),
-                property.getPropertyType(),
+                property.getCondition().getDisplayedName(),
+                property.getPropertyType().getDisplayedName(),
                 property.getLocation() != null ? new LocationDTO(
                         property.getLocation().getId(),
                         property.getLocation().getStreet(),

@@ -39,9 +39,15 @@ public class PropertyService {
     }
 
     public FixedOptionsDTO getFixedOptions() {
-        List<Condition> conditions = Arrays.stream(Condition.values()).toList();
-        List<PropertyType> propertyTypes = Arrays.stream(PropertyType.values()).toList();
-        return new FixedOptionsDTO(conditions,propertyTypes);
+        List<String> conditions = Arrays.stream(Condition.values())
+                .map(Condition::getDisplayedName)
+                .toList();
+
+        List<String> propertyTypes = Arrays.stream(PropertyType.values())
+                .map(PropertyType::getDisplayedName)
+                .toList();
+
+        return new FixedOptionsDTO(conditions, propertyTypes);
     }
 
     public Long uploadProperty(PropertyDTO property) {
@@ -56,10 +62,10 @@ public class PropertyService {
         locationRepository.save(location);
 
         Property newProperty = new Property();
-        newProperty.setPropertyType(property.propertyType());
+        newProperty.setPropertyType(PropertyType.fromDisplayedName(property.propertyType()));
         newProperty.setArea(property.area());
         newProperty.setPrice(property.price());
-        newProperty.setCondition(property.condition());
+        newProperty.setCondition(Condition.fromDisplayedName(property.condition()));
         newProperty.setSell(property.sell());
         newProperty.setBuiltYear(property.built_year());
         newProperty.setLocation(location);
@@ -92,4 +98,6 @@ public class PropertyService {
         Property searchedProperty = propertyRepository.findById(id).orElseThrow(PropertyNotFound::new);
         return new PropertyDTO(searchedProperty);
     }
+
+
 }

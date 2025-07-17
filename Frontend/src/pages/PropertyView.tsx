@@ -49,32 +49,42 @@ function PropertyView() {
           <div className="bg-emerald-200/50 w-20 rounded-full flex items-center justify-center p-3  cursor-pointer">
             <ArrowLeft size={20}></ArrowLeft> Back
           </div>
-          <div className="bold font-[500] text-2xl ms-2">
+          <div className="bold font-[500] sm:text-md md:text-2xl ms-2">
             {location.zipCode}. {location.city}, {location.street}{" "}
             {location.houseNumber}.
           </div>
           <div></div>
         </div>
 
-        <div className="flex gap-2">
+        <div className=" sm:flex-col md:flex md:flex-row space-y-2  gap-2">
           <div className="rounded-[2rem]  basis-7/12 flex gap-2">
-            <img
-              src={imageUrls?.[0] ?? placeholderImage}
-              alt={`Image of property ${propertyId}`}
-              className="rounded-[2rem] h-full w-[70%] object-cover"
-            />
-            <div className="h-full w-[30%] flex flex-col gap-2">
+            {imageUrls?.length > 1 ? (
+              <div className="flex h-full w-full gap-2">
+                <img
+                  src={imageUrls?.[0] ?? placeholderImage}
+                  alt={`Image of property ${propertyId}`}
+                  className="rounded-[2rem] h-full w-[70%] object-cover"
+                />
+                <div className="h-full w-[30%] flex flex-col gap-2">
+                  <img
+                    src={imageUrls?.[1] ?? placeholderImage}
+                    alt={`Image 2 of property ${propertyId}`}
+                    className="h-1/2 w-full object-cover rounded-[2rem]"
+                  />
+                  <img
+                    src={imageUrls?.[2] ?? placeholderImage}
+                    alt={`Image 3 of property ${propertyId}`}
+                    className="h-1/2 w-full object-cover rounded-[2rem]"
+                  />
+                </div>
+              </div>
+            ) : (
               <img
-                src={imageUrls?.[1] ?? placeholderImage}
-                alt={`Image 2 of property ${propertyId}`}
-                className="h-1/2 w-full object-cover rounded-[2rem]"
+                src={imageUrls?.[0] ?? placeholderImage}
+                alt={`Image of property ${propertyId}`}
+                className="rounded-[2rem] h-full w-full object-cover max-h-100"
               />
-              <img
-                src={imageUrls?.[2] ?? placeholderImage}
-                alt={`Image 3 of property ${propertyId}`}
-                className="h-1/2 w-full object-cover rounded-[2rem]"
-              />
-            </div>
+            )}
           </div>
           <div className="flex-col flex  p-3 rounded-[2rem] bg-emerald-200/50 basis-4/12 mx-auto items-center">
             <div className="my-auto bold font-[1000] text-5xl">
@@ -85,37 +95,36 @@ function PropertyView() {
           </div>
         </div>
 
-        <div className="flex gap-2 items-center h-30">
-          <div className="stats stats-vertical lg:stats-horizontal shadow basis-7/12 mt-2 border-3 ">
-            <div className="stat justify-center flex-col items-center flex">
-              <div className="stat-title">Area</div>
-              <div className="stat-value">{area} m²</div>
-              {/* <div className="stat-desc">Jan 1st - Feb 1st</div> */}
+        <div className="sm:flex-col md:flex md:flex-row gap-2 items-center md:h-30 ">
+          <div className="stats shadow border-3 mt-2 sm:stats-vertical md:stats-horizontal w-full max-w-full  basis-7/12">
+            <div className="stat justify-center flex-col items-center flex min-w-0">
+              <div className="stat-title text-sm sm:text-base">Area</div>
+              <div className="stat-value text-lg sm:text-xl md:text-2xl truncate">{area} m²</div>
             </div>
 
-            <div className="stat justify-center flex-col items-center flex">
-              <div className="stat-title">Room count</div>
-              <div className="stat-value">{room_count}</div>
-              {/* <div className="stat-desc">↗︎ 400 (22%)</div> */}
+            <div className="stat justify-center flex-col items-center flex min-w-0">
+              <div className="stat-title text-sm sm:text-base">Room count</div>
+              <div className="stat-value text-lg sm:text-xl md:text-2xl truncate">{room_count}</div>
             </div>
 
-            <div className="stat justify-center flex-col items-center flex">
-              <div className="stat-title">Build year</div>
-              <div className="stat-value">{built_year}</div>
-              {/* <div className="stat-desc">↘︎ 90 (14%)</div> */}
+            <div className="stat justify-center flex-col items-center flex min-w-0">
+              <div className="stat-title text-sm sm:text-base">Build year</div>
+              <div className="stat-value text-lg sm:text-xl md:text-2xl truncate">{built_year}</div>
             </div>
           </div>
-          <div className="flex items-center  basis-4/12 mt-2 m-auto h-full rounded-full">
+
+          <div className="flex items-center basis-4/12 mt-2 m-auto h-full rounded-full">
             <button className="btn btn-success m-auto w-full rounded-[2rem]">
               Seller contacts
             </button>
           </div>
         </div>
-        <div className="flex">
-          <div className="basis-7/12 mt-4">
-            <div className="border-4 rounded-[2rem] p-4 px-6">
-              <h2 className="bold font-[800] text-2xl mb-3">Description</h2>
-              <p className="font-[600]">
+
+        <div className="sm:flex-col  lg:flex-row lg:flex">
+          <div className="md:basis-7/12 mt-4 flex">
+            <div className="border-4 rounded-[2rem] p-4 px-6 my-auto">
+              <h2 className="bold font-[800] text-xl md:text-2xl mb-3">Description</h2>
+              <p className="font-[600] text-xs md:text-md">
                 Contrary to popular belief, Lorem Ipsum is not simply random
                 text. It has roots in a piece of classical Latin literature from
                 45 BC, making it over 2000 years old. Richard McClintock, a
@@ -137,7 +146,7 @@ function PropertyView() {
               </p>
             </div>
           </div>
-          <div className="basis-5/12 mt-4">
+          <div className="md:basis-5/12 mt-4">
             <iframe
               width="100%"
               height="300"

@@ -7,7 +7,7 @@ interface PropertyBlockProps {
 }
 
 function PropertyBlock({ property }: PropertyBlockProps) {
-  const {id, price, built_year, location, imageUrls, sell, room_count, area } =
+  const { id, price, built_year, location, imageUrls, sell, room_count, area } =
     property;
 
   const imageSrc =
@@ -21,20 +21,15 @@ function PropertyBlock({ property }: PropertyBlockProps) {
   const houseNumber = location.houseNumber ?? "";
 
   return (
-    <div className="sm:flex-col md:flex-row md:flex border-success border-3 border rounded-[1.2rem] my-2 p-2 gap-2">
-      <div className="basis-6/12">
-        <div
-          className="relative w-full h-full"
-          style={{ aspectRatio: "4 / 2" }}
-        >
-          <img
-            className="rounded-[1rem] w-full h-full object-cover"
-            src={imageSrc}
-            alt={`${street} ${city}`.trim() || "Property Image"}
-          />
-        </div>
+    <div className="sm:flex-col lg:flex-row lg:flex items-stretch border-success border-3 border rounded-[1.2rem] my-2 p-2 gap-2 min-h-[300px]">
+      <div className="basis-6/12 aspect-[4/2] relative h-full">
+        <img
+          className="rounded-[1rem] w-full h-full object-cover absolute top-0 left-0"
+          src={imageSrc}
+          alt={`${street} ${city}`.trim() || "Property Image"}
+        />
       </div>
-      <div className="basis-6/12 flex-col p-6 pb-2 bg-success/10 mx-auto rounded-[1rem]">
+      <div className="basis-6/12 flex flex-col justify-between p-6 pb-2 bg-success/10 rounded-[1rem] h-full xl:aspect-[4/2]">
         <div className="flex-col">
           <div className="badge bg-emerald-200/50 rounded-full text-md font-bold p-4 text-emerald-600">
             {sell !== null ? (sell ? "For sale" : "For Rent") : "N/A"}
@@ -48,8 +43,7 @@ function PropertyBlock({ property }: PropertyBlockProps) {
           </p>
           <h3 className="text-stone-500 text-md">
             {city || street || houseNumber
-              ? `${city}${
-                  city && (street || houseNumber) ? ", " : ""
+              ? `${city}${city && (street || houseNumber) ? ", " : ""
                 }${street} ${houseNumber}`.trim()
               : "Location not specified"}
           </h3>
