@@ -22,7 +22,7 @@ function PictureSelectForm() {
   return (
     <div className="w-full">
       {/* Feltöltő gomb */}
-      <div className="flex items-center gap-4 mb-4">
+      <div className="flex items-center justify-center gap-4 mb-4">
         <div
           className="cursor-pointer bg-stone-100 hover:bg-stone-200 rounded-xl p-4 flex items-center justify-center h-60 w-60"
           onClick={() => fileInputRef.current && fileInputRef.current.click()}

@@ -6,6 +6,7 @@ import PropertyDetails from "../components/UploadForms/PropertyDetails";
 import LocationDetails from "../components/UploadForms/LocationDetailsForm";
 import PictureSelect from "../components/UploadForms/PictureSelectForm";
 import Summary from "../components/UploadForms/Summary";
+import RoomEditor from "../components/UploadForms/RoomEditor";
 import "../styling/update.css";
 import { customFetch } from "../utils/fetch";
 import type { Property } from "../utils/types/Property";
@@ -18,7 +19,7 @@ function Upload() {
     mode: "onChange",
   });
   const { trigger } = methods;
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(5);
   const [conditions, setConditions] = useState<string[] | null>(null);
   const [propertyTypes, setPropertyTypes] = useState<string[] | null>(null);
   const stepFields: string[][] = [
@@ -29,7 +30,7 @@ function Upload() {
     []
   ];
 
-
+  const blueprint = "https://cdn.shopify.com/s/files/1/0387/9521/files/House_Plans.jpg?9601269751775392317";
   const steps = [
     { label: "Personal Data", element: <PersonalData/> },
     { 
@@ -38,6 +39,7 @@ function Upload() {
     },
     { label: "Location", element: <LocationDetails /> },
     { label: "Pictures", element: <PictureSelect/> },
+    {label: "Room Editor", element: <RoomEditor blueprintUrl={blueprint} imageUrls={methods.getValues("imageUrls")}></RoomEditor>},
     { label: "Summary", element: <Summary /> },
   ];
 
@@ -87,7 +89,7 @@ function Upload() {
               </ul>
             </div>
             <div className="h-110 flex items-center justify-center">
-              <div className="formdiv">
+              <div className="formdiv w-full flex justify-center items-center">
                 {steps[step - 1].element}
               </div>
             </div>
