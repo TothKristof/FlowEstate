@@ -39,7 +39,7 @@ function Upload() {
     },
     { label: "Location", element: <LocationDetails /> },
     { label: "Pictures", element: <PictureSelect/> },
-    {label: "Room Editor", element: <RoomEditor blueprintUrl={blueprint} imageUrls={methods.getValues("imageUrls")}></RoomEditor>},
+    // {label: "Room Editor", element: <RoomEditor blueprintUrl={blueprint} imageUrls={methods.getValues("imageUrls")}></RoomEditor>},
     { label: "Summary", element: <Summary /> },
   ];
 
