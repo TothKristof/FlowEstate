@@ -10,7 +10,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/othneildrew/Best-README-Template">
-    <img src="./src/assets/logo.svg" alt="Logo" width="120" height="120">
+    <img src="./Frontend/src/assets/logo.svg" alt="Logo" width="120" height="120">
   </a>
 
   <h2 align="center">Flow Estate</h2>
@@ -60,7 +60,7 @@
 
 [![Flow Estate Screen Shot][product-screenshot]](https://example.com)
 
-[product-screenshot]: ./src/assets/screenshot.jpg
+[product-screenshot]: ./Frontend/src/assets/screenshot.jpg
 
 Flow Estate is a modern real estate web application featuring interactive 3D navigation for property exploration. Users can browse, filter, and view detailed listings, as well as register, log in, and upload their own properties with images and descriptions. The platform aims to provide a visually engaging and user-friendly experience for finding or advertising homes.
 
