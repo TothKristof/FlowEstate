@@ -1,13 +1,19 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import type { Property } from "../utils/types/Property";
+import type { Room } from "../utils/types/Room";
 import { customFetch } from "../utils/fetch";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Image } from "lucide-react";
 import { priceConverter } from "../utils/priceConverter";
+import BlueprintRenderer from "../components/SinglePropertyView/RoomOverlay";
+import PictureModal from "../components/SinglePropertyView/PictureModal";
 
 function PropertyView() {
   const { id } = useParams();
   const [property, setProperty] = useState<Property>();
+  const [mainImage, setMainImage] = useState<string | undefined>(undefined);
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [modalImage, setModalImage] = useState<string | undefined>(undefined);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -17,8 +23,20 @@ function PropertyView() {
       jwt: localStorage.getItem("jwt"),
     }).then((response) => {
       setProperty(response.data);
+      // Set mainImage to the first imageUrl if available
+      if (response.data?.imageUrls?.[0]) {
+        setMainImage(response.data.imageUrls[0]);
+      }
+      console.log("🚀 ~ useEffect ~ response:", response.data);
     });
   }, [id]);
+
+  // Function to handle room click and set main image
+  const handleRoomClick = (room: Room) => {
+    if (room.imageUrl) {
+      setMainImage(room.imageUrl);
+    }
+  };
 
   if (!property) return <div>Loading...</div>;
   const googleMapsApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
@@ -37,10 +55,23 @@ function PropertyView() {
     condition,
     propertyType,
     location,
+    blueprintUrl,
     imageUrls,
   } = property;
+
+  // Például mobilon:
+  const isMobile = window.innerWidth < 640;
+  const scale = isMobile ? 0.55 : 1;
+
   return (
     <div className="flex-col h-full w-full mt-[-60px] p-4 bg-stone-200">
+      <PictureModal
+        open={showModal}
+        onClose={() => setShowModal(false)}
+        images={imageUrls}
+        selectedImage={modalImage}
+        setSelectedImage={setModalImage}
+      />
       <div className="bg-white/50 p-4 mt-[80px] rounded-[2rem]">
         <div
           className="flex h-10 gap-1 items-center my-2 mb-4"
@@ -56,42 +87,125 @@ function PropertyView() {
           <div></div>
         </div>
 
-        <div className=" sm:flex-col md:flex md:flex-row space-y-2  gap-2">
-          <div className="rounded-[2rem]  basis-7/12 flex gap-2">
-            {imageUrls?.length > 1 ? (
-              <div className="flex h-full w-full gap-2">
-                <img
-                  src={imageUrls?.[0] ?? placeholderImage}
-                  alt={`Image of property ${propertyId}`}
-                  className="rounded-[2rem] h-full w-[70%] object-cover"
-                />
-                <div className="h-full w-[30%] flex flex-col gap-2">
-                  <img
-                    src={imageUrls?.[1] ?? placeholderImage}
-                    alt={`Image 2 of property ${propertyId}`}
-                    className="h-1/2 w-full object-cover rounded-[2rem]"
-                  />
-                  <img
-                    src={imageUrls?.[2] ?? placeholderImage}
-                    alt={`Image 3 of property ${propertyId}`}
-                    className="h-1/2 w-full object-cover rounded-[2rem]"
-                  />
-                </div>
-              </div>
-            ) : (
+        <div className="flex flex-col lg:flex-row space-y-2 lg:space-y-0 gap-2">
+          <div className="rounded-[2rem] w-full lg:basis-7/12 flex gap-2">
+            {/* Responsive: lg alatt csak 1 kép és a photos button a sarkában */}
+            <div className="block lg:hidden relative w-full">
               <img
-                src={imageUrls?.[0] ?? placeholderImage}
+                onClick={() => {
+                  setModalImage(
+                    mainImage ?? imageUrls?.[0] ?? placeholderImage
+                  );
+                  setShowModal(true);
+                }}
+                src={mainImage ?? imageUrls?.[0] ?? placeholderImage}
                 alt={`Image of property ${propertyId}`}
-                className="rounded-[2rem] h-full w-full object-cover max-h-100"
+                className="rounded-[2rem] w-full object-cover cursor-pointer max-h-80"
               />
-            )}
+              {imageUrls && imageUrls.length > 1 && (
+                <button
+                  className="btn bg-black/30 absolute right-2 bottom-2 rounded-full text-white"
+                  onClick={() => {
+                    setModalImage(
+                      mainImage ?? imageUrls?.[0] ?? placeholderImage
+                    );
+                    setShowModal(true);
+                  }}
+                >
+                  <Image /> +{imageUrls.length - 1} photos
+                </button>
+              )}
+            </div>
+            {/* lg és felette: 3 képes elrendezés */}
+            <div className="hidden lg:flex h-full w-full gap-2">
+              {imageUrls && imageUrls.length > 1 ? (
+                (() => {
+                  // Filter out the mainImage from imageUrls
+                  const sideImages = imageUrls.filter(
+                    (url) => url !== mainImage
+                  );
+                  // Pick the first two images that are not the mainImage
+                  const [side1, side2] = [
+                    sideImages[0] ?? placeholderImage,
+                    sideImages[1] ?? placeholderImage,
+                  ];
+                  return (
+                    <>
+                      <img
+                        onClick={() => {
+                          setModalImage(
+                            mainImage ?? imageUrls?.[0] ?? placeholderImage
+                          );
+                          setShowModal(true);
+                        }}
+                        src={mainImage ?? imageUrls?.[0] ?? placeholderImage}
+                        alt={`Image of property ${propertyId}`}
+                        className="rounded-[2rem] h-full w-[70%] object-cover cursor-pointer"
+                      />
+                      <div className="h-full w-[30%] flex flex-col gap-2">
+                        <img
+                          onClick={() => {
+                            setModalImage(side1);
+                            setShowModal(true);
+                          }}
+                          src={side1}
+                          alt={`Image 2 of property ${propertyId}`}
+                          className="h-1/2 w-full object-cover rounded-[2rem] cursor-pointer"
+                        />
+                        <div className="h-1/2 relative ">
+                          <img
+                            onClick={() => {
+                              setModalImage(side2);
+                              setShowModal(true);
+                            }}
+                            src={side2}
+                            alt={`Image 3 of property ${propertyId}`}
+                            className="h-full w-full object-cover rounded-[2rem] cursor-pointer"
+                          />
+                          <button
+                            className="btn bg-black/30 absolute right-2 bottom-1 rounded-full"
+                            onClick={() => {
+                              setModalImage(side2);
+                              setShowModal(true);
+                            }}
+                          >
+                            <Image /> +{imageUrls.length - 2} photos
+                          </button>
+                        </div>
+                      </div>
+                    </>
+                  );
+                })()
+              ) : (
+                <img
+                  onClick={() => {
+                    setModalImage(
+                      mainImage ?? imageUrls?.[0] ?? placeholderImage
+                    );
+                    setShowModal(true);
+                  }}
+                  src={mainImage ?? imageUrls?.[0] ?? placeholderImage}
+                  alt={`Image of property ${propertyId}`}
+                  className="rounded-[2rem] h-full w-full object-cover max-h-100 cursor-pointer"
+                />
+              )}
+            </div>
           </div>
-          <div className="flex-col flex  p-3 rounded-[2rem] bg-emerald-200/50 basis-4/12 mx-auto items-center">
-            <div className="my-auto bold font-[1000] text-5xl">
-              {priceConverter(price, sell)}
+          <div className="flex-col flex p-3 rounded-[2rem] bg-emerald-200/50 basis-4/12 mx-auto items-center">
+            <div className="my-auto bold font-[1000] md:text-3xl sm:text-xl lg:text-4xl">
+              {price && priceConverter(price, sell)}
             </div>
             <div className="divider"></div>
-            <div className="my-auto"></div>
+            <div className="overflow-hidden w-80 h-40  md:w-[600px] md:h-[300px] mx-auto">
+              <BlueprintRenderer
+                blueprintUrl={blueprintUrl}
+                rooms={property.rooms}
+                width={600}
+                height={300}
+                scale={scale}
+                onRoomClick={handleRoomClick}
+              />
+            </div>
           </div>
         </div>
 
@@ -99,17 +213,23 @@ function PropertyView() {
           <div className="stats shadow border-3 mt-2 sm:stats-vertical md:stats-horizontal w-full max-w-full  basis-7/12">
             <div className="stat justify-center flex-col items-center flex min-w-0">
               <div className="stat-title text-sm sm:text-base">Area</div>
-              <div className="stat-value text-lg sm:text-xl md:text-2xl truncate">{area} m²</div>
+              <div className="stat-value text-lg sm:text-xl md:text-2xl truncate">
+                {area} m²
+              </div>
             </div>
 
             <div className="stat justify-center flex-col items-center flex min-w-0">
               <div className="stat-title text-sm sm:text-base">Room count</div>
-              <div className="stat-value text-lg sm:text-xl md:text-2xl truncate">{room_count}</div>
+              <div className="stat-value text-lg sm:text-xl md:text-2xl truncate">
+                {room_count}
+              </div>
             </div>
 
             <div className="stat justify-center flex-col items-center flex min-w-0">
               <div className="stat-title text-sm sm:text-base">Build year</div>
-              <div className="stat-value text-lg sm:text-xl md:text-2xl truncate">{built_year}</div>
+              <div className="stat-value text-lg sm:text-xl md:text-2xl truncate">
+                {built_year}
+              </div>
             </div>
           </div>
 
@@ -120,10 +240,12 @@ function PropertyView() {
           </div>
         </div>
 
-        <div className="sm:flex-col  lg:flex-row lg:flex">
+        <div className="sm:flex-col  lg:flex-row lg:flex gap-4">
           <div className="md:basis-7/12 mt-4 flex">
             <div className="border-4 rounded-[2rem] p-4 px-6 my-auto">
-              <h2 className="bold font-[800] text-xl md:text-2xl mb-3">Description</h2>
+              <h2 className="bold font-[800] text-xl md:text-2xl mb-3">
+                Description
+              </h2>
               <p className="font-[600] text-xs md:text-md">
                 Contrary to popular belief, Lorem Ipsum is not simply random
                 text. It has roots in a piece of classical Latin literature from

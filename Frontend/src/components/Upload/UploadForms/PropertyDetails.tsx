@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
-import { priceConverter } from "../../utils/priceConverter";
-import type { Property } from "../../utils/types/Property";
+import { priceConverter } from "../../../utils/priceConverter";
+import type { Property } from "../../../utils/types/Property";
 import { useFormContext } from "react-hook-form";
 
 interface PropertyDetailsProps {

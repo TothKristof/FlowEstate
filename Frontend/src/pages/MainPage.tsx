@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import MainPic from "../assets/contentPic.avif";
-import SearchForm from "../components/SearchForm";
+import SearchForm from "../components/MainPage/SearchForm";
 import { customFetch } from "../utils/fetch";
-import PropertyBlock from "../components/PropertyBlock";
+import PropertyBlock from "../components/SinglePropertyView/PropertyBlock";
 import Footer from "../components/Footer";
-import FilterChips from "../components/FilterChips";
+import FilterChips from "../components/MainPage/FilterChips";
 import type { Filter } from "../utils/types/Filter";
 import type { Property } from "../utils/types/Property";
 import { ArrowLeft, ArrowRight } from "lucide-react";

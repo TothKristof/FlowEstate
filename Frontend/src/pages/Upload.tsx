@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import Gradient from "../assets/gradient.png";
 import { ArrowLeft, ArrowRight} from "lucide-react";
-import PersonalData from "../components/UploadForms/PersonalDetailsForm";
-import PropertyDetails from "../components/UploadForms/PropertyDetails";
-import LocationDetails from "../components/UploadForms/LocationDetailsForm";
-import PictureSelect from "../components/UploadForms/PictureSelectForm";
-import Summary from "../components/UploadForms/Summary";
-import RoomEditor from "../components/UploadForms/RoomEditor";
+import PersonalData from "../components/Upload/UploadForms/PersonalDetailsForm";
+import PropertyDetails from "../components/Upload/UploadForms/PropertyDetails";
+import LocationDetails from "../components/Upload/UploadForms/LocationDetailsForm";
+import PictureSelect from "../components/Upload/UploadForms/PictureSelectForm";
+import Summary from "../components/Upload/UploadForms/Summary";
+import RoomEditor from "../components/Upload/RoomEditor";
 import "../styling/update.css";
 import { customFetch } from "../utils/fetch";
 import type { Property } from "../utils/types/Property";
@@ -29,8 +29,6 @@ function Upload() {
     ["imageUrls"],
     []
   ];
-
-  const blueprint = "https://cdn.shopify.com/s/files/1/0387/9521/files/House_Plans.jpg?9601269751775392317";
   const steps = [
     { label: "Personal Data", element: <PersonalData/> },
     { 
@@ -39,7 +37,7 @@ function Upload() {
     },
     { label: "Location", element: <LocationDetails /> },
     { label: "Pictures", element: <PictureSelect/> },
-    // {label: "Room Editor", element: <RoomEditor blueprintUrl={blueprint} imageUrls={methods.getValues("imageUrls")}></RoomEditor>},
+    {label: "Room Editor", element: <RoomEditor imageUrls={methods.getValues("imageUrls")}></RoomEditor>},
     { label: "Summary", element: <Summary /> },
   ];
 
@@ -56,6 +54,7 @@ function Upload() {
   }, []);
 
   function uploadProperty(property: Property) {
+    console.log("🚀 ~ uploadProperty ~ property:", property)
     customFetch({
       path: "property/upload",
       method: "POST",
@@ -88,15 +87,15 @@ function Upload() {
                 ))}
               </ul>
             </div>
-            <div className="h-110 flex items-center justify-center">
-              <div className="formdiv w-full flex justify-center items-center">
+            <div className="h-110 flex items-center justify-center ">
+              <div className="formdiv w-full flex justify-center items-center ">
                 {steps[step - 1].element}
               </div>
             </div>
-            <div className="flex justify-end items-center h-20">
+            <div className="flex justify-end items-center h-20 z-20">
               <button
                 type="button"
-                className="btn btn-neutral rounded-full h-10 w-10 p-0 m-2"
+                className="btn btn-neutral rounded-full h-10 w-10 p-0 m-2 z-20"
                 onClick={() => setStep(step - 1)}
                 disabled={step <= 1}
               >
@@ -105,7 +104,7 @@ function Upload() {
               {step !== steps.length ? (
                 <button
                   type="button"
-                  className="btn btn-neutral rounded-full h-10 w-10 p-0"
+                  className="btn btn-neutral rounded-full h-10 w-10 p-0 z-20"
                   onClick={async () => {
                     const valid = await trigger(stepFields[step - 1]);
                     console.log("🚀 ~ valid:", valid);
@@ -121,7 +120,7 @@ function Upload() {
                 <button
                   type="button"
                   onClick={methods.handleSubmit(uploadProperty)}
-                  className="btn btn-success rounded-[2rem] w-30"
+                  className="btn btn-success rounded-[2rem] w-30 z-20"
                 >
                   Upload
                 </button>

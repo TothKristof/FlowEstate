@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import type { Filter } from "../utils/types/Filter";
+import type { Filter } from "../../utils/types/Filter";
 
 interface PriceRangeInputProps{
   filters: Filter,

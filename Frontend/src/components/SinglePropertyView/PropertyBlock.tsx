@@ -1,5 +1,5 @@
-import { priceConverter } from "../utils/priceConverter";
-import type { Property } from "../utils/types/Property";
+import { priceConverter } from "../../utils/priceConverter";
+import type { Property } from "../../utils/types/Property";
 import { Link } from "react-router-dom";
 
 interface PropertyBlockProps {

@@ -1,4 +1,4 @@
-import type { Property } from "../../utils/types/Property";
+import type { Property } from "../../../utils/types/Property";
 import { useFormContext } from "react-hook-form";
 
 function Summary() {
@@ -21,9 +21,9 @@ function Summary() {
   } = propertyDetails;
 
   return (
-    <div className="w-full mx-auto mt-4">
-      <div className="card bg-base-100 ">
-        <div className="card-body p-4 w-150">
+    <div className="w-full mx-auto mt-8 flex justify-center">
+      <div className="card">
+        <div className="card-body p-4 w-100 mx-auto">
           <h2 className="card-title text-lg mb-2">Property Summary</h2>
 
           <div className="grid md:grid-cols-2 gap-2 text-sm">

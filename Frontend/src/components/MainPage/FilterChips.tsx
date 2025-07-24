@@ -1,4 +1,4 @@
-import type { Filter } from "../utils/types/Filter";
+import type { Filter } from "../../utils/types/Filter";
 
 interface FilterChipsProps {
   appliedFilters: Filter;

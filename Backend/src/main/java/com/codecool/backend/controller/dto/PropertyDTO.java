@@ -18,7 +18,9 @@ public record PropertyDTO(
         String condition,
         @JsonProperty("property_type") String propertyType,
         LocationDTO location,
-        List<String> imageUrls
+        String blueprintUrl,
+        List<String> imageUrls,
+        List<RoomDTO> rooms
 ) {
     public PropertyDTO(Property property) {
         this(
@@ -38,11 +40,15 @@ public record PropertyDTO(
                         property.getLocation().getCity(),
                         property.getLocation().getHouseNumber(),
                         property.getLocation().getZipCode()
-
                 ) : null,
+                property.getBlueprintUrl(),
                 property.getImages().stream()
                         .map(PropertyImage::getImageUrl)
+                        .collect(Collectors.toList()),
+                property.getRooms().stream()
+                        .map(r -> new RoomDTO(r.getName(), r.getColor(), r.getPoints(), r.getImageUrl().getImageUrl()))
                         .collect(Collectors.toList())
         );
     }
+
 }

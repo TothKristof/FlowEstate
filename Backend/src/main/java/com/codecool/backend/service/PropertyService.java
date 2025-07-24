@@ -70,7 +70,9 @@ public class PropertyService {
         newProperty.setBuiltYear(property.built_year());
         newProperty.setLocation(location);
         newProperty.setRoomCount(property.room_count());
+        newProperty.setBlueprintUrl(property.blueprintUrl());
 
+        // Images
         if (property.imageUrls() != null) {
             List<PropertyImage> images = property.imageUrls().stream()
                     .map(url -> {
@@ -83,8 +85,34 @@ public class PropertyService {
             newProperty.setImages(images);
         }
 
+        // Rooms
+        if (property.rooms() != null) {
+            List<Room> rooms = property.rooms().stream()
+                    .map(dto -> {
+                        Room room = new Room();
+                        room.setName(dto.name());
+                        room.setColor(dto.color());
+                        room.setPoints(dto.points());
+                        room.setProperty(newProperty);
+
+
+                        if (dto.imageUrl() != null && !dto.imageUrl().isEmpty() && newProperty.getImages() != null) {
+                            PropertyImage image = newProperty.getImages().stream()
+                                    .filter(img -> img.getImageUrl().equals(dto.imageUrl()))
+                                    .findFirst()
+                                    .orElse(null);
+                            room.setImageUrl(image);
+                        }
+
+                        return room;
+                    })
+                    .toList();
+            newProperty.setRooms(rooms);
+        }
+
         return propertyRepository.save(newProperty).getId();
     }
+
 
     public Page<PropertyDTO> getFilteredProperty(int page, int size, PropertyFilterDTO filter){
         Pageable pageable = PageRequest.of(page, size);

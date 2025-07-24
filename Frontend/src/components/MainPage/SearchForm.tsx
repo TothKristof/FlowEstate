@@ -1,7 +1,7 @@
 import React from "react";
 import PriceRangeInput from "./PriceRangeInput";
 import RoomRangeInput from "./RoomRangeInput";
-import type { Filter } from "../utils/types/Filter";
+import type { Filter } from "../../utils/types/Filter";
 
 // Props interfész pontos típusozással
 interface SearchFormProps {

@@ -1,4 +1,4 @@
-import Card from "../Card";
+import Card from "./Card";
 
 function InformationBlock2() {
   const cardData = [

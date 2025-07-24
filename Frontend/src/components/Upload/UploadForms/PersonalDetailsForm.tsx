@@ -1,4 +1,4 @@
-import type { Property } from "../../utils/types/Property";
+import type { Property } from "../../../utils/types/Property";
 import { useFormContext } from "react-hook-form";
 
 function PersonalDetailsForm() {

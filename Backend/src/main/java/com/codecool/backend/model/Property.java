@@ -30,8 +30,11 @@ public class Property {
     private Condition condition;
     private int builtYear;
     private boolean sell;
+    private String blueprintUrl;
     @Enumerated(EnumType.STRING)
     private PropertyType propertyType;
     @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<PropertyImage> images = new ArrayList<>();
+    @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Room> rooms = new ArrayList<>();
 }

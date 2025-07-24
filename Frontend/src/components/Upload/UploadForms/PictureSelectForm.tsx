@@ -1,8 +1,8 @@
 import { useRef } from "react";
 import { PlusCircle } from "lucide-react";
-import { uploadImagesToCloudinary } from "../../utils/imageUpload";
+import { uploadImagesToCloudinary } from "../../../utils/imageUpload";
 import "daisyui";
-import type { Property } from "../../utils/types/Property";
+import type { Property } from "../../../utils/types/Property";
 import { useFormContext } from "react-hook-form";
 
 function PictureSelectForm() {
