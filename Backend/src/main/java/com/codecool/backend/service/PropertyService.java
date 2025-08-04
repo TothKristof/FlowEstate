@@ -1,5 +1,6 @@
 package com.codecool.backend.service;
 
+import com.codecool.backend.controller.dto.BenefitDTO;
 import com.codecool.backend.controller.dto.FixedOptionsDTO;
 import com.codecool.backend.controller.dto.PropertyDTO;
 import com.codecool.backend.controller.dto.PropertyFilterDTO;
@@ -47,7 +48,9 @@ public class PropertyService {
                 .map(PropertyType::getDisplayedName)
                 .toList();
 
-        return new FixedOptionsDTO(conditions, propertyTypes);
+        List<BenefitDTO> benefits = Arrays.stream(PropertyBenefit.values()).map(BenefitDTO::new).toList();
+
+        return new FixedOptionsDTO(conditions, propertyTypes, benefits);
     }
 
     public Long uploadProperty(PropertyDTO property) {
@@ -71,6 +74,7 @@ public class PropertyService {
         newProperty.setLocation(location);
         newProperty.setRoomCount(property.room_count());
         newProperty.setBlueprintUrl(property.blueprintUrl());
+        newProperty.setThumbnailImageUrl(property.thumbnailImageUrl());
 
         // Images
         if (property.imageUrls() != null) {
@@ -108,6 +112,13 @@ public class PropertyService {
                     })
                     .toList();
             newProperty.setRooms(rooms);
+        }
+
+        if (property.benefits() != null) {
+            List<PropertyBenefit> benefits = property.benefits().stream()
+                    .map(dto -> PropertyBenefit.fromDisplayName(dto.name()))
+                    .toList();
+            newProperty.setBenefits(benefits);
         }
 
         return propertyRepository.save(newProperty).getId();

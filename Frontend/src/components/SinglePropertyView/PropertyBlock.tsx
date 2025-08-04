@@ -7,12 +7,12 @@ interface PropertyBlockProps {
 }
 
 function PropertyBlock({ property }: PropertyBlockProps) {
-  const { id, price, built_year, location, imageUrls, sell, room_count, area } =
+  const { id, price, built_year, location, sell, room_count, area, thumbnailImageUrl } =
     property;
 
   const imageSrc =
-    imageUrls && imageUrls.length > 0
-      ? imageUrls[0]
+    thumbnailImageUrl
+      ? thumbnailImageUrl
       : "https://saterdesign.com/cdn/shop/products/property-placeholder_a9ec7710-1f1e-4654-9893-28c34e3b6399_2000x.jpg?v=1500393334";
 
   // Handle null location fields

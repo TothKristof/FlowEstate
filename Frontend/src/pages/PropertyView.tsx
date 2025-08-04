@@ -7,6 +7,7 @@ import { ArrowLeft, Image } from "lucide-react";
 import { priceConverter } from "../utils/priceConverter";
 import BlueprintRenderer from "../components/SinglePropertyView/RoomOverlay";
 import PictureModal from "../components/SinglePropertyView/PictureModal";
+import BenefitListing from "../components/BenefitListing";
 
 function PropertyView() {
   const { id } = useParams();
@@ -25,7 +26,7 @@ function PropertyView() {
       setProperty(response.data);
       // Set mainImage to the first imageUrl if available
       if (response.data?.imageUrls?.[0]) {
-        setMainImage(response.data.imageUrls[0]);
+        setMainImage(response.data.thumbnailImageUrl);
       }
       console.log("🚀 ~ useEffect ~ response:", response.data);
     });
@@ -57,9 +58,9 @@ function PropertyView() {
     location,
     blueprintUrl,
     imageUrls,
+    benefits
   } = property;
 
-  // Például mobilon:
   const isMobile = window.innerWidth < 640;
   const scale = isMobile ? 0.55 : 1;
 
@@ -104,7 +105,7 @@ function PropertyView() {
               />
               {imageUrls && imageUrls.length > 1 && (
                 <button
-                  className="btn bg-black/30 absolute right-2 bottom-2 rounded-full text-white"
+                  className="btn bg-white/30 absolute right-2 bottom-2 rounded-full text-black"
                   onClick={() => {
                     setModalImage(
                       mainImage ?? imageUrls?.[0] ?? placeholderImage
@@ -163,13 +164,13 @@ function PropertyView() {
                             className="h-full w-full object-cover rounded-[2rem] cursor-pointer"
                           />
                           <button
-                            className="btn bg-black/30 absolute right-2 bottom-1 rounded-full"
+                            className="btn bg-white/30 absolute right-2 bottom-1 rounded-full"
                             onClick={() => {
                               setModalImage(side2);
                               setShowModal(true);
                             }}
                           >
-                            <Image /> +{imageUrls.length - 2} photos
+                            <Image /> +{imageUrls.length - 3} photos
                           </button>
                         </div>
                       </div>
@@ -192,11 +193,14 @@ function PropertyView() {
             </div>
           </div>
           <div className="flex-col flex p-3 rounded-[2rem] bg-emerald-200/50 basis-4/12 mx-auto items-center">
-            <div className="my-auto bold font-[1000] md:text-3xl sm:text-xl lg:text-4xl">
-              {price && priceConverter(price, sell)}
+            <div className="flex-col items-between space-y-4">
+              <div className="flex justify-center bold font-[1000] md:text-3xl sm:text-xl lg:text-4xl">{price && priceConverter(price, sell)}</div>
+              <div>
+                <BenefitListing benefits={benefits} className="flex gap-2 justify-center  flex-wrap"></BenefitListing>
+              </div>
             </div>
             <div className="divider"></div>
-            <div className="overflow-hidden w-80 h-40  md:w-[600px] md:h-[300px] mx-auto">
+            <div className="overflow-hidden w-80  md:w-[600px] md:h-[300px] mx-auto flex items-center">
               <BlueprintRenderer
                 blueprintUrl={blueprintUrl}
                 rooms={property.rooms}

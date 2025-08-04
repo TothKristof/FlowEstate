@@ -3,16 +3,16 @@
     themes: light --default;
   }
 
-/* Hide scrollbars while maintaining scroll functionality */
+/* Hide scrollbars while maintaining scroll functionality
 * {
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* Internet Explorer and Edge */
-}
+    scrollbar-width: none;
+    -ms-overflow-style: none; 
+} */
 
 /* Webkit browsers (Chrome, Safari, etc.) */
-*::-webkit-scrollbar {
+/* *::-webkit-scrollbar {
     display: none;
-}
+} */
 
 h1{
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;

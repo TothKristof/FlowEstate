@@ -10,6 +10,7 @@ import RoomEditor from "../components/Upload/RoomEditor";
 import "../styling/update.css";
 import { customFetch } from "../utils/fetch";
 import type { Property } from "../utils/types/Property";
+import type { Benefit } from "../utils/types/Benefit";
 import { useForm, FormProvider } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
@@ -22,6 +23,7 @@ function Upload() {
   const [step, setStep] = useState(5);
   const [conditions, setConditions] = useState<string[] | null>(null);
   const [propertyTypes, setPropertyTypes] = useState<string[] | null>(null);
+  const [benefits, setBenefits] = useState<Benefit[] | null>(null);
   const stepFields: string[][] = [
     ["owner_name", "owner_phone"],
     ["area", "condition", "price", "room_count", "property_type", "sell", "built_year"],
@@ -33,7 +35,7 @@ function Upload() {
     { label: "Personal Data", element: <PersonalData/> },
     { 
       label: "Property Details", 
-      element: <PropertyDetails conditions={conditions ?? []} propertyTypes={propertyTypes ?? []} /> 
+      element: <PropertyDetails conditions={conditions ?? []} propertyTypes={propertyTypes ?? []} benefits={benefits ?? []}  /> 
     },
     { label: "Location", element: <LocationDetails /> },
     { label: "Pictures", element: <PictureSelect/> },
@@ -50,6 +52,7 @@ function Upload() {
       console.log(response.data);
       setConditions(response.data.conditions);
       setPropertyTypes(response.data.propertyTypes);
+      setBenefits(response.data.benefits);
     });
   }, []);
 
@@ -75,7 +78,7 @@ function Upload() {
           style={{ backgroundImage: `url(${Gradient})` }}
         >
           <div className="w-[70%] bg-white shadow-sm md:p-2 rounded-[1rem] h-150 flex-col justify-between">
-            <div className="w-full flex h-20">
+            <div className="w-full flex pb-3">
               <ul className="steps mx-auto steps-vertical md:steps-horizontal">
                 {steps.map((s, index) => (
                   <li

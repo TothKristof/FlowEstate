@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { PlusCircle } from "lucide-react";
+import { Divide, PlusCircle } from "lucide-react";
 import { uploadImagesToCloudinary } from "../../../utils/imageUpload";
 import "daisyui";
 import type { Property } from "../../../utils/types/Property";
@@ -9,14 +9,22 @@ function PictureSelectForm() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { setValue, watch } = useFormContext<Property>();
   const imageUrls = watch("imageUrls") || [];
+  const thumbnailImageUrl = watch("thumbnailImageUrl");
 
   async function selectImage(event: React.ChangeEvent<HTMLInputElement>) {
     const files = event.target.files;
-    if (!files || files.length === 0) return; 
+    if (!files || files.length === 0) return;
 
     const urls = await uploadImagesToCloudinary(Array.from(files));
     const updatedUrls = [...imageUrls, ...urls];
     setValue("imageUrls", updatedUrls);
+    if(!thumbnailImageUrl){
+      setValue("thumbnailImageUrl", updatedUrls[0]);
+    }
+  }
+
+  function setImageToThumbnail(url: string){
+    setValue("thumbnailImageUrl", url);
   }
 
   return (
@@ -40,15 +48,31 @@ function PictureSelectForm() {
 
         {/* Carousel */}
         {imageUrls.length > 0 && (
-          <div className="carousel carousel-center rounded-box w-full max-w-md">
-            {imageUrls.map((url:string, index:number) => (
-              <div key={index} className="carousel-item">
-                <img src={url} alt={`image-${index}`} className="w-90 h-60 object-cover rounded-xl m-1" />
-              </div>
-            ))}
-          </div>
+          <div className="w-full max-w-md overflow-x-auto whitespace-nowrap  rounded-xl">
+          {imageUrls.map((url: string, index: number) => (
+            <div
+              key={index}
+              className="inline-block w-72 h-60 m-1 rounded-xl overflow-hidden "
+            >
+              <img
+                src={url}
+                alt={`image-${index}`}
+                className={`w-full h-full object-cover ${thumbnailImageUrl == url ? `border-success border-3`:``}`}
+                onClick={() => setImageToThumbnail(url)}
+              />
+            </div>
+          ))}
+        </div>
         )}
       </div>
+      <div>
+          {thumbnailImageUrl && (
+            <div className="flex w-full justify-center items-center gap-2">
+              <div className="rounded-full h-3 w-3 bg-success"></div>
+              <div className="font-[600]">Thumbnail image</div>
+            </div>
+          )}
+        </div>
     </div>
   );
 }

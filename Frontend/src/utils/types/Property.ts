@@ -1,4 +1,5 @@
 import type { Room } from "./Room"
+import type { Benefit } from "./Benefit"
 
 export interface Property{
     id: number | null,
@@ -19,5 +20,7 @@ export interface Property{
     },
     blueprintUrl: string | null,
     imageUrls: string[] | null
-    rooms: Room[]
+    rooms: Room[],
+    benefits: Benefit[],
+    thumbnailImageUrl: string | null
   };

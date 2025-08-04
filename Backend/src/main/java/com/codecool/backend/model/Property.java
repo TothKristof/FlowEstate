@@ -37,4 +37,8 @@ public class Property {
     private List<PropertyImage> images = new ArrayList<>();
     @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Room> rooms = new ArrayList<>();
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Enumerated(EnumType.STRING)
+    private List<PropertyBenefit> benefits = new ArrayList<>();
+    private String thumbnailImageUrl;
 }

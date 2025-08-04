@@ -20,7 +20,9 @@ public record PropertyDTO(
         LocationDTO location,
         String blueprintUrl,
         List<String> imageUrls,
-        List<RoomDTO> rooms
+        List<RoomDTO> rooms,
+        List<BenefitDTO> benefits,
+        String thumbnailImageUrl
 ) {
     public PropertyDTO(Property property) {
         this(
@@ -47,7 +49,11 @@ public record PropertyDTO(
                         .collect(Collectors.toList()),
                 property.getRooms().stream()
                         .map(r -> new RoomDTO(r.getName(), r.getColor(), r.getPoints(), r.getImageUrl().getImageUrl()))
-                        .collect(Collectors.toList())
+                        .collect(Collectors.toList()),
+                property.getBenefits().stream()
+                        .map(b -> new BenefitDTO(b.getDisplayName(),b.getIconName()))
+                        .collect(Collectors.toList()),
+                property.getThumbnailImageUrl()
         );
     }
 
