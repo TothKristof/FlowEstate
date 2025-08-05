@@ -75,6 +75,7 @@ public class PropertyService {
         newProperty.setRoomCount(property.room_count());
         newProperty.setBlueprintUrl(property.blueprintUrl());
         newProperty.setThumbnailImageUrl(property.thumbnailImageUrl());
+        newProperty.setImageFolderId(property.imageFolderId());
 
         // Images
         if (property.imageUrls() != null) {

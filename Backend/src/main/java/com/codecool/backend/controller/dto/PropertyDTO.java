@@ -19,6 +19,7 @@ public record PropertyDTO(
         @JsonProperty("property_type") String propertyType,
         LocationDTO location,
         String blueprintUrl,
+        String imageFolderId,
         List<String> imageUrls,
         List<RoomDTO> rooms,
         List<BenefitDTO> benefits,
@@ -44,6 +45,7 @@ public record PropertyDTO(
                         property.getLocation().getZipCode()
                 ) : null,
                 property.getBlueprintUrl(),
+                property.getImageFolderId(),
                 property.getImages().stream()
                         .map(PropertyImage::getImageUrl)
                         .collect(Collectors.toList()),

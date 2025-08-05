@@ -4,6 +4,7 @@ import { uploadImagesToCloudinary } from "../../../utils/imageUpload";
 import "daisyui";
 import type { Property } from "../../../utils/types/Property";
 import { useFormContext } from "react-hook-form";
+import { v4 as uuidv4 } from "uuid";
 
 function PictureSelectForm() {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -14,10 +15,11 @@ function PictureSelectForm() {
   async function selectImage(event: React.ChangeEvent<HTMLInputElement>) {
     const files = event.target.files;
     if (!files || files.length === 0) return;
-
-    const urls = await uploadImagesToCloudinary(Array.from(files));
+    const imageFolderId = uuidv4();
+    const urls = await uploadImagesToCloudinary(Array.from(files), imageFolderId);
     const updatedUrls = [...imageUrls, ...urls];
     setValue("imageUrls", updatedUrls);
+    setValue("imageFolderId", imageFolderId);
     if(!thumbnailImageUrl){
       setValue("thumbnailImageUrl", updatedUrls[0]);
     }

@@ -1,10 +1,10 @@
  export interface Filter{
-    minPrice: number |null,
-    maxPrice: number | null,
-    minRooms: number| null,
-    maxRooms: number | null,
-    sell: boolean | null,
-    propertyType: null,
-    condition: null,
-    city: string | null,
+    minPrice?: number,
+    maxPrice?: number,
+    minRooms?: number,
+    maxRooms?: number,
+    sell?: boolean,
+    propertyType?: string,
+    condition?: string,
+    city?: string,
   }

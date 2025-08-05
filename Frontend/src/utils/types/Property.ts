@@ -2,25 +2,25 @@ import type { Room } from "./Room"
 import type { Benefit } from "./Benefit"
 
 export interface Property{
-    id: number | null,
-    owner_name: string | null,
-    owner_phone: string | null,
-    area: number | null,
-    built_year: number | null,
-    price: number | null,
-    room_count: number | null,
+    owner_name: string,
+    owner_phone: string,
+    area: number,
+    built_year: number,
+    price: number,
+    room_count: number,
     sell: boolean,
-    condition: string | null,
-    property_type: string | null,
+    condition: string,
+    property_type: string,
     location: {
-      city: string | null,
-      street: string | null,
-      houseNumber: string | null,
-      zipCode: number | null,
+      city: string,
+      street: string,
+      houseNumber: string,
+      zipCode: number,
     },
-    blueprintUrl: string | null,
-    imageUrls: string[] | null
-    rooms: Room[],
-    benefits: Benefit[],
-    thumbnailImageUrl: string | null
+    blueprintUrl?: string,
+    imageFolderId?: string,
+    imageUrls?: string[]
+    rooms?: Room[],
+    benefits?: Benefit[],
+    thumbnailImageUrl?: string
   };
