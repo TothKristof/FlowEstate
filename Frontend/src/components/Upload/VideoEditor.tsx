@@ -16,17 +16,22 @@ export default function VideoEditor() {
   const [edges, setEdges] = useState([]);
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
-  const [error, setError] = useState('');
-  
+  const [error, setError] = useState("");
+
+  const videoUploadError = "Cannot upload video";
+  const uploadVideoInProgress = "Uploading video...";
+  const uploadVideoText = "Upload video";
+  const takeSnapshotText = "Take snapshot";
+  const snapshotsText = "Snapshots";
+  const createTransitionsText = "Create transitions";
+
   const handleVideoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const videoUploadError = "Cannot upload video";
-  
     try {
       setUploading(true);
-      setError('');
+      setError("");
       setVideoFile(file);
       setVideoUrl(URL.createObjectURL(file));
     } catch (err) {
@@ -35,15 +40,14 @@ export default function VideoEditor() {
       setUploading(false);
     }
   };
-  
 
   const takeSnapshot = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     const video = videoRef.current;
     const canvas = canvasRef.current;
     if (!video || !canvas) return;
-
-    const timestamp = video.currentTime;
+    if (snapshots.find((snap) => snap.timestamp === video.currentTime)) return;
+    const timestamp = parseFloat(video.currentTime.toFixed(1));
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
     const ctx = canvas.getContext("2d");
@@ -58,7 +62,11 @@ export default function VideoEditor() {
     setSnapshots((prev) => [...prev, node]);
   };
 
-  const addEdge = (fromId: string, toId: string, e: React.MouseEvent<HTMLButtonElement>) => {
+  const addEdge = (
+    fromId: string,
+    toId: string,
+    e: React.MouseEvent<HTMLButtonElement>
+  ) => {
     e.preventDefault();
     const from = snapshots.find((n) => n.id === fromId);
     const to = snapshots.find((n) => n.id === toId);
@@ -75,11 +83,11 @@ export default function VideoEditor() {
   };
 
   return (
-    <div className="p-4">
+    <div className="p-4 ">
       {!videoUrl && (
         <div className="flex flex-col items-center justify-center h-80 w-full border rounded-xl p-8 bg-stone-50">
           <label className="mb-4 text-lg font-semibold">
-            Töltsd fel a bejárási videót!
+            {uploadVideoText}
           </label>
           <input
             type="file"
@@ -89,74 +97,69 @@ export default function VideoEditor() {
             className="file-input file-input-bordered w-full max-w-xs"
           />
           {uploading && (
-            <div className="mt-2 text-blue-600">Feltöltés folyamatban...</div>
+            <div className="mt-2 text-blue-600">{uploadVideoInProgress}</div>
           )}
           {error && <div className="mt-2 text-red-600">{error}</div>}
         </div>
       )}
 
       {videoUrl && (
-        <div className="mt-4">
-          <video ref={videoRef} src={videoUrl} controls width="600" />
-          <button className="mt-2 btn btn-success" onClick={takeSnapshot}>
-            Take Snapshot
-          </button>
+        <div className="mt-4 flex flex-row gap-8 items-start w-200">
+          <div className="w-8/12">
+            <video ref={videoRef} src={videoUrl} controls width="600" />
+            <button
+              className="mt-2 btn btn-success w-full"
+              onClick={takeSnapshot}
+            >
+              {takeSnapshotText}
+            </button>
+          </div>
+          <div className="mt-0 w-4/12 flex flex-col gap-4 h-60">
+            <div className="h-1/2">
+              <h3 className="text-lg font-bold mb-2">{snapshotsText}</h3>
+              <div className="flex gap-4 overflow-x-auto max-w-xs p-2 border rounded bg-stone-50 h-full">
+                {snapshots.map((snap) => (
+                  <div key={snap.id} className="text-center min-w-[8rem]">
+                    <img
+                      src={snap.snapshotUrl}
+                      alt="snapshot"
+                      className="w-32 h-20 object-cover"
+                    />
+                    <div className="text-xs">{snap.timestamp.toFixed(2)}s</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="flex flex-row gap-4 h-1/2">
+              {snapshots.length >= 2 && (
+                <div className="mt-4">
+                  <h3 className="text-lg font-bold mb-2">
+                    {createTransitionsText}
+                  </h3>
+                  <div className="flex flex-wrap gap-2 overflow-y-auto">
+                    {snapshots.map((from) =>
+                      snapshots.map((to) =>
+                        from.id !== to.id && from.timestamp < to.timestamp ? (
+                          <button
+                            className="btn btn-outline"
+                            key={`${from.id}-${to.id}`}
+                            onClick={(e) => addEdge(from.id, to.id, e)}
+                          >
+                            {from.timestamp.toFixed(1)}s →{" "}
+                            {to.timestamp.toFixed(1)}s
+                          </button>
+                        ) : null
+                      )
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       )}
 
       <canvas ref={canvasRef} style={{ display: "none" }} />
-
-      {snapshots.length > 0 && (
-        <div className="mt-4">
-          <h3 className="text-lg font-bold mb-2">Snapshots</h3>
-          <div className="flex gap-4 overflow-x-auto">
-            {snapshots.map((snap) => (
-              <div key={snap.id} className="text-center">
-                <img
-                  src={snap.snapshotUrl}
-                  alt="snapshot"
-                  className="w-32 h-20 object-cover"
-                />
-                <div className="text-xs">{snap.timestamp.toFixed(2)}s</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {snapshots.length >= 2 && (
-        <div className="mt-4">
-          <h3 className="text-lg font-bold mb-2">Create Transitions</h3>
-          <div className="flex flex-wrap gap-2">
-            {snapshots.map((from) =>
-              snapshots.map((to) =>
-                from.id !== to.id ? (
-                  <button
-                    className="btn btn-outline"
-                    key={`${from.id}-${to.id}`}
-                    onClick={(e) => addEdge(from.id, to.id, e)}
-                  >
-                    {from.timestamp.toFixed(1)}s → {to.timestamp.toFixed(1)}s
-                  </button>
-                ) : null
-              )
-            )}
-          </div>
-        </div>
-      )}
-
-      {edges.length > 0 && (
-        <div className="mt-4">
-          <h3 className="text-lg font-bold mb-2">Defined Transitions</h3>
-          <ul className="list-disc list-inside">
-            {edges.map((edge, index) => (
-              <li key={index} className="text-sm break-all">
-                {edge.videoSegmentUrl}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
     </div>
   );
 }
