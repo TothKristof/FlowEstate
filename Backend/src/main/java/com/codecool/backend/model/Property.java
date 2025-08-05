@@ -33,6 +33,7 @@ public class Property {
     private String blueprintUrl;
     @Enumerated(EnumType.STRING)
     private PropertyType propertyType;
+    private String imageFolderId;
     @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<PropertyImage> images = new ArrayList<>();
     @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, fetch = FetchType.EAGER)

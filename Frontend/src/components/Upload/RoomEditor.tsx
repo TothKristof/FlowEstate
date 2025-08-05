@@ -14,6 +14,7 @@ export default function SimpleRoomEditor({ imageUrls }: { imageUrls: string[] })
   const { setValue, watch } = useFormContext<Property>();
   const rooms = watch("rooms") || [];
   const blueprintUrl = watch("blueprintUrl");
+  const imageFolderId = watch("imageFolderId");
   // elmentett szobák
   const [currentPoints, setCurrentPoints] = useState<number[]>([]); // éppen rajzolt alakzat
   const [roomName, setRoomName] = useState("");
@@ -30,8 +31,7 @@ export default function SimpleRoomEditor({ imageUrls }: { imageUrls: string[] })
     try {
       const files = event.target.files;
       if (!files || files.length === 0) return;
-      const urls = await uploadImagesToCloudinary([files[0]]);
-      console.log("🚀 ~ handleBlueprintUpload ~ urls:", urls)
+      const urls = await uploadImagesToCloudinary([files[0]], imageFolderId);
       if (urls && urls[0]) {
         setValue("blueprintUrl", urls[0]);
       }

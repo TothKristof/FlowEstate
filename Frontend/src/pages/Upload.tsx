@@ -1,13 +1,15 @@
-import { useEffect, useState } from "react";
-import Gradient from "../assets/gradient.png";
-import { ArrowLeft, ArrowRight} from "lucide-react";
 import PersonalData from "../components/Upload/UploadForms/PersonalDetailsForm";
 import PropertyDetails from "../components/Upload/UploadForms/PropertyDetails";
 import LocationDetails from "../components/Upload/UploadForms/LocationDetailsForm";
 import PictureSelect from "../components/Upload/UploadForms/PictureSelectForm";
 import Summary from "../components/Upload/UploadForms/Summary";
 import RoomEditor from "../components/Upload/RoomEditor";
+import VideoEditor from "../components/Upload/VideoEditor";
 import "../styling/update.css";
+
+import { useEffect, useState } from "react";
+import Gradient from "../assets/gradient.png";
+import { ArrowLeft, ArrowRight} from "lucide-react";
 import { customFetch } from "../utils/fetch";
 import type { Property } from "../utils/types/Property";
 import type { Benefit } from "../utils/types/Benefit";
@@ -20,7 +22,7 @@ function Upload() {
     mode: "onChange",
   });
   const { trigger } = methods;
-  const [step, setStep] = useState(5);
+  const [step, setStep] = useState(6);
   const [conditions, setConditions] = useState<string[] | null>(null);
   const [propertyTypes, setPropertyTypes] = useState<string[] | null>(null);
   const [benefits, setBenefits] = useState<Benefit[] | null>(null);
@@ -40,6 +42,7 @@ function Upload() {
     { label: "Location", element: <LocationDetails /> },
     { label: "Pictures", element: <PictureSelect/> },
     {label: "Room Editor", element: <RoomEditor imageUrls={methods.getValues("imageUrls")}></RoomEditor>},
+    {label: "Video Editor", element: <VideoEditor/>},
     { label: "Summary", element: <Summary /> },
   ];
 
