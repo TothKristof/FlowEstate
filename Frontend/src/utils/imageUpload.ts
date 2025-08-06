@@ -1,5 +1,6 @@
 export async function uploadImagesToCloudinary(files: File[], folderId: string) {
   const uploadedUrls = [];
+  const cloud_name = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
 
   for (const file of files) {
     const formData = new FormData();
@@ -8,7 +9,7 @@ export async function uploadImagesToCloudinary(files: File[], folderId: string) 
     formData.append("folder", `FlowEstate/${folderId}`);
 
     const response = await fetch(
-      "https://api.cloudinary.com/v1_1/dwrtglpsr/image/upload",
+      `https://api.cloudinary.com/v1_1/${cloud_name}/image/upload`,
       {
         method: "POST",
         body: formData,

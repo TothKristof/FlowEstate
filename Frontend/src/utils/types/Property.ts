@@ -1,5 +1,6 @@
 import type { Room } from "./Room"
 import type { Benefit } from "./Benefit"
+import type { PropertyMap } from "./PropertyMap"
 
 export interface Property{
     owner_name: string,
@@ -22,5 +23,6 @@ export interface Property{
     imageUrls?: string[]
     rooms?: Room[],
     benefits?: Benefit[],
-    thumbnailImageUrl?: string
+    thumbnailImageUrl?: string,
+    propertyMap: PropertyMap
   };
