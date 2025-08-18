@@ -145,6 +145,7 @@ public class PropertyService {
                                 edge.setFrom(dto.from());
                                 edge.setTo(dto.to());
                                 edge.setVideoSegmentUrl(dto.videoSegmentUrl());
+                                edge.setReverseUrl(dto.reverseUrl());
                                 return edge;
                             })
                             .toList()

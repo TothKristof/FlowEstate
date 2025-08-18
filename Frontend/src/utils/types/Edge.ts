@@ -1,5 +1,6 @@
 export interface Edge{
     from: string,
     to: string,
-    videoSegmentUrl: string
+    videoSegmentUrl: string,
+    reverseUrl: string
 }

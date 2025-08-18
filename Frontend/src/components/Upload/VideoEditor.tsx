@@ -79,7 +79,7 @@ export default function VideoEditor() {
     console.log(updatedMap);
     return updatedSnapshots;
   };
-
+  
   const addEdge = (
     fromId: string,
     toId: string,
@@ -89,13 +89,17 @@ export default function VideoEditor() {
     const from = propertyMap.snapshots.find((n) => n.id === fromId);
     const to = propertyMap.snapshots.find((n) => n.id === toId);
     if (!from || !to) return;
-
+  
+    const forwardUrl = `https://res.cloudinary.com/${cloud_name}/video/upload/so_${from.timestamp},eo_${to.timestamp}/${propertyMap.videoPublicId}.mp4`;
+    const reverseUrl = `https://res.cloudinary.com/${cloud_name}/video/upload/so_${from.timestamp},eo_${to.timestamp},e_reverse/${propertyMap.videoPublicId}.mp4`;
+  
     const edge = {
       from: fromId,
       to: toId,
-      videoSegmentUrl: `https://res.cloudinary.com/${cloud_name}/video/upload/so_${from.timestamp},eo_${to.timestamp}/${propertyMap.videoPublicId}.mp4`,
+      forwardUrl,
+      reverseUrl,
     };
-
+  
     const updatedEdges = [...(propertyMap.edges || []), edge];
     const updatedMap: PropertyMap = {
       videoPublicId: propertyMap.videoPublicId,
@@ -106,6 +110,7 @@ export default function VideoEditor() {
     console.log(updatedMap);
     return updatedEdges;
   };
+  
 
   const playSegment = (
     e: React.MouseEvent<HTMLButtonElement>,

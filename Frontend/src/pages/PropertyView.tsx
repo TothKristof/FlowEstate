@@ -8,12 +8,15 @@ import { priceConverter } from "../utils/priceConverter";
 import BlueprintRenderer from "../components/SinglePropertyView/RoomOverlay";
 import PictureModal from "../components/SinglePropertyView/PictureModal";
 import BenefitListing from "../components/BenefitListing";
+import VideoModal from "../components/SinglePropertyView/VideoModal";
+import { Md3dRotation } from "react-icons/md";
 
 function PropertyView() {
   const { id } = useParams();
   const [property, setProperty] = useState<Property>();
   const [mainImage, setMainImage] = useState<string | undefined>(undefined);
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [showVideoModal, setShowVideoModal] = useState(false);
   const [modalImage, setModalImage] = useState<string | undefined>(undefined);
   const navigate = useNavigate();
 
@@ -58,7 +61,8 @@ function PropertyView() {
     location,
     blueprintUrl,
     imageUrls,
-    benefits
+    benefits,
+    propertyMap,
   } = property;
 
   const isMobile = window.innerWidth < 640;
@@ -132,17 +136,33 @@ function PropertyView() {
                   ];
                   return (
                     <>
-                      <img
-                        onClick={() => {
-                          setModalImage(
-                            mainImage ?? imageUrls?.[0] ?? placeholderImage
-                          );
-                          setShowModal(true);
-                        }}
-                        src={mainImage ?? imageUrls?.[0] ?? placeholderImage}
-                        alt={`Image of property ${propertyId}`}
-                        className="rounded-[2rem] h-full w-[70%] object-cover cursor-pointer"
-                      />
+                      <div className="h-full w-[70%] relative">
+                        {propertyMap && (
+                          <button
+                            className="btn bg-white/70 absolute left-2 top-1 rounded-full z-10"
+                            onClick={() => setShowVideoModal(true)}
+                          >
+                            <Md3dRotation size={30} color="black" />
+                          </button>
+                        )}
+
+                        <img
+                          onClick={() => {
+                            setModalImage(
+                              mainImage ?? imageUrls?.[0] ?? placeholderImage
+                            );
+                            setShowModal(true);
+                          }}
+                          src={mainImage ?? imageUrls?.[0] ?? placeholderImage}
+                          alt={`Image of property ${propertyId}`}
+                          className="rounded-[2rem] object-cover h-full cursor-pointer"
+                        />
+                        <VideoModal
+                          open={showVideoModal}
+                          onClose={() => setShowVideoModal(false)}
+                          propertyMap={propertyMap}
+                        />
+                      </div>
                       <div className="h-full w-[30%] flex flex-col gap-2">
                         <img
                           onClick={() => {
@@ -194,9 +214,14 @@ function PropertyView() {
           </div>
           <div className="flex-col flex p-3 rounded-[2rem] bg-emerald-200/50 basis-4/12 mx-auto items-center">
             <div className="flex-col items-between space-y-4">
-              <div className="flex justify-center bold font-[1000] md:text-3xl sm:text-xl lg:text-4xl">{price && priceConverter(price, sell)}</div>
+              <div className="flex justify-center bold font-[1000] md:text-3xl sm:text-xl lg:text-4xl">
+                {price && priceConverter(price, sell)}
+              </div>
               <div>
-                <BenefitListing benefits={benefits} className="flex gap-2 justify-center  flex-wrap"></BenefitListing>
+                <BenefitListing
+                  benefits={benefits}
+                  className="flex gap-2 justify-center  flex-wrap"
+                ></BenefitListing>
               </div>
             </div>
             <div className="divider"></div>

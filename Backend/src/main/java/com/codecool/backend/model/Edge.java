@@ -19,4 +19,5 @@ public class Edge {
     @Column(name = "to_id")
     private String to;
     private String videoSegmentUrl;
+    private String reverseUrl;
 }

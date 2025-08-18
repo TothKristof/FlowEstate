@@ -5,11 +5,15 @@ import com.codecool.backend.model.Edge;
 public record EdgeDTO(
         String from,
         String to,
-        String videoSegmentUrl
+        String videoSegmentUrl,
+        String reverseUrl
 ) {
     public EdgeDTO(Edge edge) {
-        this(edge.getFrom(),
+        this(
+                edge.getFrom(),
                 edge.getTo(),
-                edge.getVideoSegmentUrl());
+                edge.getVideoSegmentUrl(),
+                edge.getReverseUrl()
+        );
     }
 }
