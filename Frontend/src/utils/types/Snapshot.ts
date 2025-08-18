@@ -1,5 +1,5 @@
 export interface Snapshot{
-    uuid: string,
+    id: string,
     timestamp: number,
     snapshotUrl: string
 }

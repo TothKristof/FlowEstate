@@ -24,5 +24,5 @@ export interface Property{
     rooms?: Room[],
     benefits?: Benefit[],
     thumbnailImageUrl?: string,
-    propertyMap: PropertyMap
+    propertyMap?: PropertyMap
   };

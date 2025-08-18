@@ -122,6 +122,37 @@ public class PropertyService {
             newProperty.setBenefits(benefits);
         }
 
+        if (property.propertyMap() != null) {
+            PropertyMap map = new PropertyMap();
+            map.setVideoPublicId(property.propertyMap().videoPublicId());
+
+            map.setSnapshots(
+                    property.propertyMap().snapshots().stream()
+                            .map(dto -> {
+                                Snapshot snapshot = new Snapshot();
+                                snapshot.setUuid(dto.id());
+                                snapshot.setSnapshotUrl(dto.snapshotUrl());
+                                snapshot.setTimestamp(dto.timestamp());
+                                return snapshot;
+                            })
+                            .toList()
+            );
+
+            map.setEdges(
+                    property.propertyMap().edges().stream()
+                            .map(dto -> {
+                                Edge edge = new Edge();
+                                edge.setFrom(dto.from());
+                                edge.setTo(dto.to());
+                                edge.setVideoSegmentUrl(dto.videoSegmentUrl());
+                                return edge;
+                            })
+                            .toList()
+            );
+            newProperty.setPropertyMap(map);
+        }
+
+
         return propertyRepository.save(newProperty).getId();
     }
 

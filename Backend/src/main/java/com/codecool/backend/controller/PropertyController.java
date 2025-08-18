@@ -8,6 +8,7 @@ import com.codecool.backend.model.Property;
 import com.codecool.backend.model.PropertyType;
 import com.codecool.backend.service.PropertyService;
 import org.springframework.data.domain.Page;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
@@ -24,11 +25,13 @@ public class PropertyController {
     }
 
     @GetMapping
+    @Transactional
     public PropertyDTO getPropertyById(@RequestParam("id")Long id){
         return propertyService.getPropertyById(id);
     }
 
     @GetMapping("/all")
+    @Transactional
     public Page<PropertyDTO> getItems(@RequestParam(defaultValue = "0") int page,
                                       @RequestParam(defaultValue = "10") int size) {
         return propertyService.getAllProperty(page, size);

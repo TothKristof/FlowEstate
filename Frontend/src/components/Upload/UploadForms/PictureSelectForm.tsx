@@ -15,7 +15,11 @@ function PictureSelectForm() {
   async function selectImage(event: React.ChangeEvent<HTMLInputElement>) {
     const files = event.target.files;
     if (!files || files.length === 0) return;
-    const imageFolderId = uuidv4();
+    let imageFolderId = watch("imageFolderId");
+    if (!imageFolderId) {
+      imageFolderId = uuidv4();
+      setValue("imageFolderId", imageFolderId);
+    }
     const urls = await uploadImagesToCloudinary(Array.from(files), imageFolderId);
     const updatedUrls = [...imageUrls, ...urls];
     setValue("imageUrls", updatedUrls);

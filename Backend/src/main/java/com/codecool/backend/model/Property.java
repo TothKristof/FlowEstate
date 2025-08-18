@@ -42,4 +42,6 @@ public class Property {
     @Enumerated(EnumType.STRING)
     private List<PropertyBenefit> benefits = new ArrayList<>();
     private String thumbnailImageUrl;
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private PropertyMap propertyMap;
 }

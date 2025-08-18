@@ -1,31 +1,27 @@
-// A React component that allows users to:
-// 1. Upload a video
-// 2. Preview it
-// 3. Extract snapshots from specific timestamps
-// 4. Link snapshots together
-// 5. Generate Cloudinary segment URLs for transitions
-
 import React, { useRef, useState } from "react";
-import { v4 as uuidv4 } from "uuid";
+import { v4 as idv4 } from "uuid";
 import { useFormContext } from "react-hook-form";
 import { uploadVideoToCloudinary } from "../../utils/videoUpload";
+import type { Property } from "../../utils/types/Property";
+import type { PropertyMap } from "../../utils/types/PropertyMap";
+import { IoReload } from "react-icons/io5";
+import { GoVideo } from "react-icons/go";
 
 export default function VideoEditor() {
-  const videoRef = useRef(null);
-  const canvasRef = useRef(null);
-  const [videoFile, setVideoFile] = useState(null);
-  const [snapshots, setSnapshots] = useState([]);
-  const [edges, setEdges] = useState([]);
-  const [videoUrl, setVideoUrl] = useState<string | null>(
-    "https://res.cloudinary.com/dwrtglpsr/video/upload/v1754476147/FlowEstate/undefined/video/csibg3x6kzhpxeb8aclk.mp4"
-  );
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const [videoUrl, setVideoUrl] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
+  const [isSegmentPlaying, setIsSegmentPlaying] = useState(false);
+
   const { setValue, watch } = useFormContext<Property>();
   const folderId = watch("imageFolderId");
-  const [cloudinaryPublicId, setCloudinaryPublicId] = useState<string>(
-    "FlowEstate/undefined/video/csibg3x6kzhpxeb8aclk"
-  );
+  const propertyMap = watch("propertyMap") || {
+    videoPublicId: "",
+    snapshots: [],
+    edges: [],
+  };
 
   const videoUploadError = "Cannot upload video";
   const uploadVideoInProgress = "Uploading video...";
@@ -44,13 +40,12 @@ export default function VideoEditor() {
       setUploading(true);
       setError("");
 
-      // Cloudinary feltöltés
       const result = await uploadVideoToCloudinary(file, `${folderId}/video`);
       setVideoUrl(result.secure_url);
-      setCloudinaryPublicId(result.public_id);
-
-      // Lokális preview (nem kötelező, ha csak streamelnél Cloudinaryról)
-      setVideoFile(file);
+      setValue("propertyMap", {
+        ...propertyMap,
+        videoPublicId: result.public_id,
+      });
     } catch (err) {
       setError(videoUploadError);
     } finally {
@@ -61,20 +56,28 @@ export default function VideoEditor() {
   const takeSnapshot = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     const video = videoRef.current;
-    if (!video || !cloudinaryPublicId) return;
-  
+    if (!video || !propertyMap?.videoPublicId) return;
+
     const timestamp = parseFloat(video.currentTime.toFixed(1));
-    if (snapshots.find((snap) => snap.timestamp === timestamp)) return;
-  
-    const snapshotUrl = `https://res.cloudinary.com/${cloud_name}/video/upload/so_${timestamp},du_0.1/${cloudinaryPublicId}.jpg`;
-  
+    if ((propertyMap.snapshots || []).find((snap) => snap.timestamp === timestamp)) return;
+
+    const snapshotUrl = `https://res.cloudinary.com/${cloud_name}/video/upload/so_${timestamp},du_0.1/${propertyMap.videoPublicId}.jpg`;
+
     const node = {
-      id: uuidv4(),
+      id: idv4(),
       timestamp,
       snapshotUrl,
     };
-  
-    setSnapshots((prev) => [...prev, node]);
+
+    const updatedSnapshots = [...(propertyMap.snapshots || []), node];
+    const updatedMap: PropertyMap = {
+      videoPublicId: propertyMap.videoPublicId,
+      snapshots: updatedSnapshots,
+      edges: propertyMap.edges || [],
+    };
+    setValue("propertyMap", updatedMap);
+    console.log(updatedMap);
+    return updatedSnapshots;
   };
 
   const addEdge = (
@@ -83,16 +86,25 @@ export default function VideoEditor() {
     e: React.MouseEvent<HTMLButtonElement>
   ) => {
     e.preventDefault();
-    const from = snapshots.find((n) => n.id === fromId);
-    const to = snapshots.find((n) => n.id === toId);
+    const from = propertyMap.snapshots.find((n) => n.id === fromId);
+    const to = propertyMap.snapshots.find((n) => n.id === toId);
     if (!from || !to) return;
 
     const edge = {
       from: fromId,
       to: toId,
-      videoSegmentUrl: `https://res.cloudinary.com/${cloud_name}/video/upload/so_${from.timestamp},eo_${to.timestamp}/${cloudinaryPublicId}.mp4`,
+      videoSegmentUrl: `https://res.cloudinary.com/${cloud_name}/video/upload/so_${from.timestamp},eo_${to.timestamp}/${propertyMap.videoPublicId}.mp4`,
     };
-    setEdges((prev) => [...prev, edge]);
+
+    const updatedEdges = [...(propertyMap.edges || []), edge];
+    const updatedMap: PropertyMap = {
+      videoPublicId: propertyMap.videoPublicId,
+      snapshots: propertyMap.snapshots,
+      edges: updatedEdges,
+    };
+    setValue("propertyMap", updatedMap);
+    console.log(updatedMap);
+    return updatedEdges;
   };
 
   const playSegment = (
@@ -103,15 +115,21 @@ export default function VideoEditor() {
     if (!videoRef.current) return;
     videoRef.current.src = segmentUrl;
     videoRef.current.play();
+    setIsSegmentPlaying(true);
+  };
+
+  const playFullVideo = () => {
+    if (!videoRef.current || !videoUrl) return;
+    videoRef.current.src = videoUrl;
+    videoRef.current.play();
+    setIsSegmentPlaying(false);
   };
 
   return (
-    <div className="p-4 ">
-      {!videoUrl && (
+    <div className="p-4">
+      {!propertyMap.videoPublicId && (
         <div className="flex flex-col items-center justify-center h-80 w-full border rounded-xl p-8 bg-stone-50">
-          <label className="mb-4 text-lg font-semibold">
-            {uploadVideoText}
-          </label>
+          <label className="mb-4 text-lg font-semibold">{uploadVideoText}</label>
           <input
             type="file"
             accept="video/*"
@@ -129,32 +147,44 @@ export default function VideoEditor() {
       {videoUrl && (
         <div className="mt-4 flex flex-row gap-8 items-start w-200">
           <div className="w-8/12">
-            <video
-              ref={videoRef}
-              src={videoUrl}
-              autoPlay
-              muted
-              controls
-              width="600"
-              crossOrigin="anonymous"
-            />
-            <button
+            <div className="relative w-fit">
+              <video
+                ref={videoRef}
+                src={videoUrl}
+                autoPlay
+                muted
+                controls
+                width="600"
+                crossOrigin="anonymous"
+              />
+              {isSegmentPlaying && (
+                <button
+                  onClick={playFullVideo}
+                  className="absolute top-2 right-2 bg-white text-black px-2 py-1 rounded shadow hover:bg-gray-200"
+                  title="Load back full video"
+                >
+                  <IoReload />
+                </button>
+              )}
+
+            </div>
+            {!isSegmentPlaying && (<button
               className="mt-2 btn btn-success w-full"
               onClick={takeSnapshot}
             >
               {takeSnapshotText}
-            </button>
+            </button>)}
           </div>
           <div className="mt-0 w-4/12 flex flex-col gap-4 h-full">
             <div className="h-1/2">
               <h3 className="text-lg font-bold mb-2">{snapshotsText}</h3>
               <div className="flex gap-4 overflow-x-auto p-2 border rounded bg-stone-50 h-full min-w-sm">
-                {snapshots.map((snap) => (
-                  <div key={snap.id} className="text-center min-w-[8rem] h-full ">
+                {(propertyMap.snapshots || []).map((snap) => (
+                  <div key={snap.id} className="text-center min-w-[8rem] h-full">
                     <img
                       src={snap.snapshotUrl}
                       alt="snapshot"
-                      className="h-25  object-cover"
+                      className="h-25 object-cover"
                     />
                     <div className="text-xs">{snap.timestamp.toFixed(2)}s</div>
                   </div>
@@ -162,14 +192,14 @@ export default function VideoEditor() {
               </div>
             </div>
             <div className="flex flex-row gap-4 h-1/2">
-              {snapshots.length >= 2 && (
+              {(propertyMap.snapshots || []).length >= 2 && (
                 <div className="mt-4">
                   <h3 className="text-lg font-bold mb-2">
                     {createTransitionsText}
                   </h3>
                   <div className="flex flex-wrap gap-2 overflow-y-auto">
-                    {snapshots.map((from) =>
-                      snapshots.map((to) =>
+                    {(propertyMap.snapshots || []).map((from) =>
+                      (propertyMap.snapshots || []).map((to) =>
                         from.id !== to.id && from.timestamp < to.timestamp ? (
                           <button
                             className="btn btn-outline"
@@ -190,13 +220,13 @@ export default function VideoEditor() {
         </div>
       )}
       <div className="flex mt-6 gap-2">
-        {edges.map((edge, idx) => (
+        {(propertyMap.edges || []).map((edge, idx) => (
           <button
             key={idx}
             onClick={(e) => playSegment(e, edge.videoSegmentUrl)}
-            className="btn btn-info text-left"
+            className="btn btn-success"
           >
-            ▶
+            <GoVideo color="white"  size={20}/>
           </button>
         ))}
       </div>

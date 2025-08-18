@@ -23,7 +23,8 @@ public record PropertyDTO(
         List<String> imageUrls,
         List<RoomDTO> rooms,
         List<BenefitDTO> benefits,
-        String thumbnailImageUrl
+        String thumbnailImageUrl,
+        PropertyMapDTO propertyMap
 ) {
     public PropertyDTO(Property property) {
         this(
@@ -55,7 +56,8 @@ public record PropertyDTO(
                 property.getBenefits().stream()
                         .map(b -> new BenefitDTO(b.getDisplayName(),b.getIconName()))
                         .collect(Collectors.toList()),
-                property.getThumbnailImageUrl()
+                property.getThumbnailImageUrl(),
+                new PropertyMapDTO(property.getPropertyMap())
         );
     }
 
