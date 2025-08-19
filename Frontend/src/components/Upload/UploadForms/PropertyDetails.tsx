@@ -115,9 +115,9 @@ function PropertyDetails({
                 name="price"
               />
               <p className="m-2 text-xl w-full text-right">
-                {(propertyDetails.price !== null && propertyDetails.price !== undefined && propertyDetails.price !== 0)
-                  ? priceConverter(propertyDetails.price, propertyDetails.sell)
-                  : ""}
+                {(propertyDetails.price == null || propertyDetails.price == undefined || propertyDetails.price == 0 || Number.isNaN(propertyDetails.price))
+                  ? ""
+                  : priceConverter(propertyDetails.price, propertyDetails.sell)}
               </p>
               {errors.price && <span className="text-red-500 p-1 text-sm">{errors.price.message}</span>}
             </div>

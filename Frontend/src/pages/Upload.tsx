@@ -5,7 +5,9 @@ import PictureSelect from "../components/Upload/UploadForms/PictureSelectForm";
 import Summary from "../components/Upload/UploadForms/Summary";
 import RoomEditor from "../components/Upload/RoomEditor";
 import VideoEditor from "../components/Upload/VideoEditor";
+import Steps from "../components/Upload/Steps";
 import "../styling/update.css";
+import type { Step } from "../utils/types/Step";
 
 import { useEffect, useState } from "react";
 import Gradient from "../assets/gradient.png";
@@ -22,7 +24,7 @@ function Upload() {
     mode: "onChange",
   });
   const { trigger } = methods;
-  const [step, setStep] = useState(6);
+  const [step, setStep] = useState<number>(6);
   const [conditions, setConditions] = useState<string[] | null>(null);
   const [propertyTypes, setPropertyTypes] = useState<string[] | null>(null);
   const [benefits, setBenefits] = useState<Benefit[] | null>(null);
@@ -33,7 +35,7 @@ function Upload() {
     ["imageUrls"],
     []
   ];
-  const steps = [
+  const steps: Step[] = [
     { label: "Personal Data", element: <PersonalData/> },
     { 
       label: "Property Details", 
@@ -46,6 +48,7 @@ function Upload() {
     { label: "Summary", element: <Summary /> },
   ];
 
+  /*{Get predefined values from backend}*/
   useEffect(() => {
     customFetch({
       path: "property/options",
@@ -59,6 +62,7 @@ function Upload() {
     });
   }, []);
 
+  /*{Upload complete property to backend}*/
   function uploadProperty(property: Property) {
     console.log("🚀 ~ uploadProperty ~ property:", property)
     customFetch({
@@ -82,16 +86,7 @@ function Upload() {
         >
           <div className="w-[70%] bg-white shadow-sm md:p-2 rounded-[1rem] h-150 flex-col justify-between">
             <div className="w-full flex pb-3">
-              <ul className="steps mx-auto steps-vertical md:steps-horizontal">
-                {steps.map((s, index) => (
-                  <li
-                    key={index}
-                    className={`step ${step > index ? "step-success" : ""}`}
-                  >
-                    {s.label}
-                  </li>
-                ))}
-              </ul>
+              <Steps steps={steps} actualStep={step}></Steps>
             </div>
             <div className="h-110 flex items-center justify-center ">
               <div className="formdiv w-full flex justify-center items-center ">
