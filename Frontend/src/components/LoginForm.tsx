@@ -24,7 +24,7 @@ function LoginForm() {
     });
     if (response.data.jwt) {
       localStorage.setItem("jwt", response.data.jwt);
-      navigate("/main");
+      navigate("/main/1");
     }
   }
 

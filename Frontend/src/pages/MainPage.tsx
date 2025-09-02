@@ -8,11 +8,12 @@ import FilterChips from "../components/MainPage/FilterChips";
 import type { Filter } from "../utils/types/Filter";
 import type { Property } from "../utils/types/Property";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import { Link, useParams } from "react-router-dom";
 
 function MainPage() {
+  const { page } = useParams();
   const [properties, setProperties] = useState<Property[]>();
-  const [page, setPage] = useState(0);
-  const [size] = useState(3);
+  const [size] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
   const [appliedFilters, setAppliedFilters] = useState<Filter>({
     minPrice: null,
@@ -39,7 +40,7 @@ function MainPage() {
     async function loadProperties() {
       const jwt = localStorage.getItem("jwt");
       const response = await customFetch({
-        path: `property/all?page=${page}&size=${size}`,
+        path: `property/all?page=${page - 1}&size=${size}`,
         method: "GET",
         jwt: jwt,
       });
@@ -57,7 +58,7 @@ function MainPage() {
   async function filteredSearch() {
     const jwt = localStorage.getItem("jwt");
     const response = await customFetch({
-      path: `property/filtered?page=${page}&size=${size}`,
+      path: `property/filtered?page=${page - 1}&size=${size}`,
       method: "POST",
       body: filters,
       jwt: jwt,
@@ -98,26 +99,26 @@ function MainPage() {
             ))}
         </div>
         <div className="flex mt-4 justify-center gap-2 ">
-          {page > 0 ? (
+          {page > 1 ? (
+            <Link to={`/main/${page - 1}`}>
             <button
               className="btn btn-success rounded-full"
-              onClick={() => setPage(page - 1)}
             >
               <ArrowLeft />
             </button>
+            </Link>
           ) : (
             <div className="w-[40px] h-[40px]" />
           )}
           <div className="text-2xl my-auto">
-            {page + 1}/{totalPage}
+            {page}/{totalPage}
           </div>
-          {page < totalPage - 1 ? (
-            <button
-              className="btn btn-success rounded-full"
-              onClick={() => setPage(page + 1)}
-            >
-              <ArrowRight />
-            </button>
+          {page < totalPage  ? (
+            <Link to={`/main/${Number(page) + 1}`}>
+              <button className="btn btn-success rounded-full">
+                <ArrowRight />
+              </button>
+            </Link>
           ) : (
             <div className="w-[40px] h-[40px]" />
           )}

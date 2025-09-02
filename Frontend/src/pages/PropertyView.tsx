@@ -80,11 +80,7 @@ function PropertyView() {
       <div className="bg-white/50 p-4 mt-[80px] rounded-[2rem]">
         <div
           className="flex h-10 gap-1 items-center my-2 mb-4"
-          onClick={() => navigate("/main")}
         >
-          <div className="bg-emerald-200/50 w-20 rounded-full flex items-center justify-center p-3  cursor-pointer">
-            <ArrowLeft size={20}></ArrowLeft> Back
-          </div>
           <div className="bold font-[500] sm:text-md md:text-2xl ms-2">
             {location.zipCode}. {location.city}, {location.street}{" "}
             {location.houseNumber}.
