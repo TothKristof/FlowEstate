@@ -79,7 +79,7 @@ export default function VideoEditor() {
     console.log(updatedMap);
     return updatedSnapshots;
   };
-  
+
   const addEdge = (
     fromId: string,
     toId: string,
@@ -89,17 +89,17 @@ export default function VideoEditor() {
     const from = propertyMap.snapshots.find((n) => n.id === fromId);
     const to = propertyMap.snapshots.find((n) => n.id === toId);
     if (!from || !to) return;
-  
+
     const forwardUrl = `https://res.cloudinary.com/${cloud_name}/video/upload/so_${from.timestamp},eo_${to.timestamp}/${propertyMap.videoPublicId}.mp4`;
     const reverseUrl = `https://res.cloudinary.com/${cloud_name}/video/upload/so_${from.timestamp},eo_${to.timestamp},e_reverse/${propertyMap.videoPublicId}.mp4`;
-  
+
     const edge = {
       from: fromId,
       to: toId,
       forwardUrl,
       reverseUrl,
     };
-  
+
     const updatedEdges = [...(propertyMap.edges || []), edge];
     const updatedMap: PropertyMap = {
       videoPublicId: propertyMap.videoPublicId,
@@ -110,7 +110,7 @@ export default function VideoEditor() {
     console.log(updatedMap);
     return updatedEdges;
   };
-  
+
 
   const playSegment = (
     e: React.MouseEvent<HTMLButtonElement>,
@@ -226,13 +226,14 @@ export default function VideoEditor() {
       )}
       <div className="flex mt-6 gap-2">
         {(propertyMap.edges || []).map((edge, idx) => (
-          <button
-            key={idx}
-            onClick={(e) => playSegment(e, edge.videoSegmentUrl)}
-            className="btn btn-success"
-          >
-            <GoVideo color="white"  size={20}/>
-          </button>
+          <div key={idx} className="flex gap-2">
+            <button
+              onClick={(e) => playSegment(e, edge.forwardUrl)}
+              className="btn btn-success"
+            >
+              <GoVideo color="white" size={20} />
+            </button>
+          </div>
         ))}
       </div>
       <canvas ref={canvasRef} style={{ display: "none" }} />

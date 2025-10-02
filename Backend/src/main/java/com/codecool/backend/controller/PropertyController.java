@@ -37,6 +37,7 @@ public class PropertyController {
         return propertyService.getAllProperty(page, size);
     }
 
+    @Transactional
     @PostMapping("/filtered")
     public Page<PropertyDTO> getItems(@RequestParam(defaultValue = "0") int page,
                                       @RequestParam(defaultValue = "10") int size,
