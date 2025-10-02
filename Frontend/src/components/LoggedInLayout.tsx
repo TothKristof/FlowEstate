@@ -25,7 +25,7 @@ function LoggedInLayout() {
       <div className="pt-6 left-0 w-full h-[50px] flex items-center z-10 relative">
         <div
           className="w-1/4 flex justify-start ms-4"
-          onClick={() => navigate("/main")}
+          onClick={() => navigate("/main/1")}
         >
           <Brand />
         </div>
@@ -43,7 +43,7 @@ function LoggedInLayout() {
               className="avatar cursor-pointer"
               onClick={() => setOpen(!open)}
             >
-              <div className="w-12 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+              <div className="w-12 rounded-full ring ring-success ring-offset-base-100 ring-offset-2">
                 <img src="https://img.daisyui.com/images/profile/demo/yellingcat@192.webp" />
               </div>
             </div>

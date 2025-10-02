@@ -5,7 +5,7 @@ function PersonalDetailsForm() {
   const { register, formState: { errors } } = useFormContext<Property>();
 
   return (
-    <fieldset className="fieldset m-auto my-2 rounded-box w-xs border p-4">
+    <fieldset className="fieldset m-auto my-2 rounded-box sm:w-10 md:w-xs border p-4">
       <div className="basis-3/12 m-2">
         <legend className="fieldset-legend">Full Name</legend>
         <input

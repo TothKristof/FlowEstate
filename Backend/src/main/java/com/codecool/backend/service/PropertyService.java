@@ -16,6 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.List;
@@ -158,6 +159,7 @@ public class PropertyService {
     }
 
 
+    @Transactional
     public Page<PropertyDTO> getFilteredProperty(int page, int size, PropertyFilterDTO filter){
         Pageable pageable = PageRequest.of(page, size);
         Specification<Property> spec = PropertySpecification.withFilters(filter);

@@ -84,11 +84,12 @@ function Upload() {
           className="h-[105dvh] bg-center bg-cover flex justify-center items-center"
           style={{ backgroundImage: `url(${Gradient})` }}
         >
-          <div className="w-[70%] bg-white shadow-sm md:p-2 rounded-[1rem] h-150 flex-col justify-between">
+          <div className="sm:w-full md:w-[70%] bg-white shadow-sm md:p-2 rounded-[1rem] h-150 flex sm:flex-row md:flex-col justify-between">
+            
             <div className="w-full flex pb-3">
               <Steps steps={steps} actualStep={step}></Steps>
             </div>
-            <div className="h-110 flex items-center justify-center ">
+            <div className="sm:h-70 md:h-104 lg:h-110 flex items-center justify-center">
               <div className="formdiv w-full flex justify-center items-center ">
                 {steps[step - 1].element}
               </div>

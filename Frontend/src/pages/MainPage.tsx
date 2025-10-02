@@ -9,11 +9,13 @@ import type { Filter } from "../utils/types/Filter";
 import type { Property } from "../utils/types/Property";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
+import AiChat from "../components/MainPage/AiChat";
+import { IoChatbubbleEllipses } from "react-icons/io5";
 
 function MainPage() {
   const { page } = useParams();
   const [properties, setProperties] = useState<Property[]>();
-  const [size] = useState(1);
+  const [size] = useState(2);
   const [totalPage, setTotalPage] = useState(1);
   const [appliedFilters, setAppliedFilters] = useState<Filter>({
     minPrice: null,
@@ -35,6 +37,7 @@ function MainPage() {
     condition: null,
     city: null,
   });
+  const [showAiChat, setShowAiChat] = useState(false);
 
   useEffect(() => {
     async function loadProperties() {
@@ -123,6 +126,10 @@ function MainPage() {
             <div className="w-[40px] h-[40px]" />
           )}
         </div>
+      </div>
+      <div className="flex flex-col items-center justify-center absolute bottom-5 right-2 fixed">
+        <button className="h-15 w-15 rounded-full bg-success flex items-center justify-center cursor-pointer" onClick={() => setShowAiChat(!showAiChat)}><IoChatbubbleEllipses size={30} /></button>
+        {showAiChat && <AiChat />}
       </div>
       <Footer></Footer>
     </div>
