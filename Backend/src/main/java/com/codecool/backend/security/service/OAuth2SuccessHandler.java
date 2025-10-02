@@ -39,7 +39,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         String jwt = jwtUtils.generateJwtTokenFromEmail(email);
         logger.info("🎫 JWT generated: {}", jwt);
 
-        response.sendRedirect("http://localhost:5173/login?token=" + jwt);
+        response.sendRedirect("http://localhost:5173/main/1");
     }
 }
 
