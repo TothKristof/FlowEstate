@@ -25,7 +25,7 @@ function LoggedInLayout() {
       <div className="pt-6 left-0 w-full h-[50px] flex items-center z-10 relative">
         <div
           className="w-1/4 flex justify-start ms-4"
-          onClick={() => navigate("/main")}
+          onClick={() => navigate("/main/1")}
         >
           <Brand />
         </div>
