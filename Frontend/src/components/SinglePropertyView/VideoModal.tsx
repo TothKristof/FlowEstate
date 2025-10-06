@@ -35,7 +35,7 @@ function VideoModal({ open, onClose, propertyMap }: VideoModalProps) {
     const edge = findEdge(currentSnapshot.id, nextSnapshot.id);
     if (playEdge && edge && videoRef.current) {
       // előrefelé van edge
-      playVideoSegment(edge.videoSegmentUrl, () =>
+      playVideoSegment(edge.forwardUrl, () =>
         setCurrentSnapshot(nextSnapshot)
       );
     } else if (playEdge && !edge && videoRef.current) {

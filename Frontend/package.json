@@ -16,6 +16,7 @@
     "@splinetool/runtime": "^1.9.96",
     "@tailwindcss/vite": "^4.1.7",
     "axios": "^1.10.0",
+    "groq-sdk": "^0.33.0",
     "konva": "^9.3.22",
     "lucide-react": "^0.511.0",
     "react": "^19.1.0",

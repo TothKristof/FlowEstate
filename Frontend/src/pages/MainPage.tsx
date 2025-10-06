@@ -11,6 +11,7 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import AiChat from "../components/MainPage/AiChat";
 import { IoChatbubbleEllipses } from "react-icons/io5";
+import NoSuchContent from "../components/NoSuchContent";
 
 function MainPage() {
   const { page } = useParams();
@@ -58,17 +59,20 @@ function MainPage() {
     filteredSearch();
   }, [appliedFilters]);
 
-  async function filteredSearch() {
+  async function filteredSearch(customFilters?: Filter) {
+    const activeFilters = customFilters || filters;
     const jwt = localStorage.getItem("jwt");
+
     const response = await customFetch({
       path: `property/filtered?page=${page - 1}&size=${size}`,
       method: "POST",
-      body: filters,
+      body: activeFilters,
       jwt: jwt,
     });
+
     setProperties(response.data.content);
     setTotalPage(response.data.totalPages);
-    setAppliedFilters(filters);
+    setAppliedFilters(activeFilters);
   }
 
   return (
@@ -95,41 +99,56 @@ function MainPage() {
           />
         </div>
 
-        <div>
-          {properties &&
-            properties.map((property) => (
-              <PropertyBlock property={property} key={property.id} />
-            ))}
-        </div>
-        <div className="flex mt-4 justify-center gap-2 ">
-          {page > 1 ? (
-            <Link to={`/main/${page - 1}`}>
-            <button
-              className="btn btn-success rounded-full"
-            >
-              <ArrowLeft />
-            </button>
-            </Link>
-          ) : (
-            <div className="w-[40px] h-[40px]" />
-          )}
-          <div className="text-2xl my-auto">
-            {page}/{totalPage}
+        {properties?.length == 0 ? (
+          <NoSuchContent></NoSuchContent>
+        ) : (
+          <div>
+            <div>
+              {properties &&
+                properties.map((property) => (
+                  <PropertyBlock property={property} key={property.id} />
+                ))}
+            </div>
+            <div className="flex mt-4 justify-center gap-2 ">
+              {page > 1 ? (
+                <Link to={`/main/${page - 1}`}>
+                  <button className="btn btn-success rounded-full">
+                    <ArrowLeft />
+                  </button>
+                </Link>
+              ) : (
+                <div className="w-[40px] h-[40px]" />
+              )}
+              <div className="text-2xl my-auto">
+                {page}/{totalPage}
+              </div>
+              {page < totalPage ? (
+                <Link to={`/main/${Number(page) + 1}`}>
+                  <button className="btn btn-success rounded-full">
+                    <ArrowRight />
+                  </button>
+                </Link>
+              ) : (
+                <div className="w-[40px] h-[40px]" />
+              )}
+            </div>
           </div>
-          {page < totalPage  ? (
-            <Link to={`/main/${Number(page) + 1}`}>
-              <button className="btn btn-success rounded-full">
-                <ArrowRight />
-              </button>
-            </Link>
-          ) : (
-            <div className="w-[40px] h-[40px]" />
-          )}
-        </div>
+        )}
       </div>
       <div className="flex flex-col items-center justify-center absolute bottom-5 right-2 fixed">
-        <button className="h-15 w-15 rounded-full bg-success flex items-center justify-center cursor-pointer" onClick={() => setShowAiChat(!showAiChat)}><IoChatbubbleEllipses size={30} /></button>
-        {showAiChat && <AiChat />}
+        <button
+          className="h-15 w-15 rounded-full bg-success flex items-center justify-center cursor-pointer"
+          onClick={() => setShowAiChat(!showAiChat)}
+        >
+          <IoChatbubbleEllipses size={30} />
+        </button>
+        {showAiChat && (
+          <AiChat
+            filters={filters}
+            setFilters={setFilters}
+            filteredSearch={filteredSearch}
+          />
+        )}
       </div>
       <Footer></Footer>
     </div>

@@ -51,13 +51,14 @@ public record PropertyDTO(
                         .map(PropertyImage::getImageUrl)
                         .collect(Collectors.toList()),
                 property.getRooms().stream()
-                        .map(r -> new RoomDTO(r.getName(), r.getColor(), r.getPoints(), r.getImageUrl().getImageUrl()))
+                        .map(r -> new RoomDTO(r.getName(), r.getColor(), r.getPoints(),
+                                r.getImageUrl() != null ? r.getImageUrl().getImageUrl() : null))
                         .collect(Collectors.toList()),
                 property.getBenefits().stream()
-                        .map(b -> new BenefitDTO(b.getDisplayName(),b.getIconName()))
+                        .map(b -> new BenefitDTO(b.getDisplayName(), b.getIconName()))
                         .collect(Collectors.toList()),
                 property.getThumbnailImageUrl(),
-                new PropertyMapDTO(property.getPropertyMap())
+                property.getPropertyMap() != null ? new PropertyMapDTO(property.getPropertyMap()) : null
         );
     }
 

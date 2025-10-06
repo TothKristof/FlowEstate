@@ -24,3 +24,4 @@ data/
 .env.development
 .env.test
 .env.production
+frontend/.env

@@ -18,6 +18,6 @@ public class Edge {
     private String from;
     @Column(name = "to_id")
     private String to;
-    private String videoSegmentUrl;
+    private String forwardUrl;
     private String reverseUrl;
 }
